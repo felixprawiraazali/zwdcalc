@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZWDS 13-Palace Responsive Sections without A3</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+	:root { --gap: 0; --item-padding: 3px; }
+	* { box-sizing: border-box; }
+	html, body { overflow-x: hidden; margin: 0; padding: 0; }
+	body {
+	  display: flex;
+	  align-items: flex-start;
+	  justify-content: center;
+	  padding-top: 1rem;
+	  min-height: 100vh;
+	  background: #f5f5f5;
+	  font-family: sans-serif;
+	}
+	.zwds-grid {
+	  width: min(90vw, 90vh);
+	  max-width: 100vw;
+	  aspect-ratio: 1;
+	  min-height: 800px;
+	  display: grid;
+	  grid-template-columns: repeat(4, 1fr);
+	  grid-template-rows:    repeat(4, 1fr);
+	  gap: var(--gap);
+	  padding: var(--gap);
+	  grid-template-areas:
+		"p1   p2   p3   p4"
+		"p12 p13  p13  p5"
+		"p11 p13  p13  p6"
+		"p10 p9   p8   p7";
+	  background: #fff;
+	  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+	}
+	.zwds-grid > div:not(.p13) {
+	  display: flex;
+	  flex-direction: column;
+	  cursor: pointer;
+	  border: 1px solid #555;
+	  background: #fafafa;
+	  transition: background .2s;
+	  overflow: hidden;
+	  padding: var(--item-padding);
+	}
+	.zwds-grid > div:not(.p13):hover { background: #e8e8e8; }
+	/* Wide layout */
+	.sectionA { flex: 2; display: flex; }
+	.sectionA1, .sectionA2 {
+	  flex: 1;
+	  display: flex;
+	  font-size: calc(0.8rem + 0.5vw);
+	  
+	  text-align: left;
+	}
+	.sectionA1 {
+		align-items: start;
+		justify-content: start;
+	}
+	.sectionA2 { 
+		border-right: none; 
+		align-items: start;
+		justify-content: end;
+	}
+	.sectionB { flex: 1; display: flex; }
+	.sectionB1 {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  flex-direction: column;
+	  font-size: calc(0.65rem + 0.5vw);      
+	  text-align: center;
+	}
+	.sectionB1-1, .sectionB1-2 {
+	  font-size: calc(0.65rem + 0.5vw);
+	  
+	  text-align: center;
+	}    
+	.sectionB2 {
+	  flex: 0 0 40%;
+	  display: flex;
+	  flex-direction: column;
+	}
+	.sectionB2-1, .sectionB2-2 {
+	  flex: 1;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  border-bottom: 1px solid #ccc;
+	  font-size: calc(0.65rem + 0.5vw);
+	  
+	  text-align: center;
+	}
+	.sectionB2-2 { border-bottom: none; }
+	.sectionB3 {
+	  flex: 0 0 40%;
+	  display: flex;
+	  flex-direction: column;
+	}
+	.sectionB3-1, .sectionB3-2 {
+	  flex: 1;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  border-bottom: 1px solid #ccc;
+	  font-size: calc(0.65rem + 0.5vw);
+	  
+	  text-align: center;
+	}
+	.sectionB3-2 { border-bottom: none; }
+	.sectionB1, .sectionB2, .sectionB3 { border-right: 1px solid #ccc; }
+	.sectionB3 { border-right: none; }
+	.p13 {
+	  grid-area: p13;
+	  background: #e0e0e0;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-size: calc(0.9rem + 0.5vw);
+	  border: 1px solid #555;
+	  overflow: hidden;
+	  text-align: center;
+	}
+	/* Small screens */
+	@media (max-width: 600px) {
+	  .sectionA { flex-direction: column; }
+	  .sectionA1 { border-bottom: 1px solid #ccc; }
+	  .sectionA2 { flex: 1; border-right: none; }
+	  .sectionB { flex-direction: column; }
+	  .sectionB1, .sectionB2, .sectionB3 {
+		border-bottom: 1px solid #ccc;
+		flex: 1;
+	  }
+	  .sectionB1 {
+		display: flex;
+		
+		justify-content: start;
+		flex-direction: row;
+	  }
+	  .sectionB1-1, .sectionB1-2 {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	  }
+	  .sectionB1-2::before {
+		content: "";
+		margin-left: 2px;
+	  }
+	  .sectionB3 { border-bottom: none; }
+	  .sectionB2 { flex-direction: row; order: 3 }
+	  .sectionB3 { flex-direction: column; order: 2}
+	  .sectionB2-1, .sectionB2-2 {
+		justify-content: start;
+	  }
+	  .sectionB3-1 {
+		order: 2;
+	  }
+	  .sectionB3-2 {
+		order: 1;
+	  }
+	  .sectionA1, .sectionA2,
+	  .sectionB1, .sectionB2-1, .sectionB2-2, .sectionB3-1, .sectionB3-2,
+	  .p13 {
+		  white-space: nowrap;
+		  overflow: hidden;
+		  text-overflow: ellipsis;
+		}
+	}
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-4xl mx-auto p-6 space-y-8">
+	<!-- Form -->
+	<form id="chartForm" class="bg-white p-6 rounded-lg shadow space-y-6">
+	  <h2 class="text-2xl font-semibold">Plot Zi Wei Dou Shu Chart</h2>
+
+	  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<!-- Name -->
+		<div>
+		  <label class="block font-medium">Name</label>
+		  <input id="name" name="name" type="text"
+				 class="mt-1 w-full border rounded p-2"
+				 placeholder="e.g. Felix Prawira">
+		</div>
+
+		<!-- Birth Date -->
+		<div class="space-y-1">
+		  <label class="block font-medium">Birth Date</label>
+		  <div class="flex gap-2">
+			<input id="year"  name="year"  type="number" placeholder="YYYY" class="w-1/3 border rounded p-2">
+			<input id="month" name="month" type="number" placeholder="MM"   class="w-1/3 border rounded p-2">
+			<input id="day"   name="day"   type="number" placeholder="DD"   class="w-1/3 border rounded p-2">
+		  </div>
+		</div>
+
+		<!-- Birth Time -->
+		<div class="space-y-1">
+		  <label class="block font-medium">Birth Time</label>
+		  <div class="flex gap-2">
+			<input id="hour"   name="hour"   type="number" placeholder="HH" class="w-1/2 border rounded p-2">
+			<input id="minute" name="minute" type="number" placeholder="MM" class="w-1/2 border rounded p-2">
+		  </div>
+		</div>
+
+		<!-- Gender -->
+		<div>
+		  <label class="block font-medium">Gender</label>
+		  <div class="mt-1 flex gap-4">
+			<label><input type="radio" name="gender" value="male"> Male</label>
+			<label><input type="radio" name="gender" value="female"> Female</label>
+		  </div>
+		</div>        
+	  </div>
+
+	  <button type="submit"
+			  class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+		Plot Chart
+	  </button>
+	</form>
+
+	  <div class="zwds-grid">
+		<template id="palace-template">
+		  <div class="sectionA">
+			<div class="sectionA1"></div>
+			<div class="sectionA2"></div>
+		  </div>
+		  <div class="sectionB">
+			<div class="sectionB1">
+			  <div class="sectionB1-1"></div>
+			  <div class="sectionB1-2"></div>
+			</div>
+			<div class="sectionB2">
+			  <div class="sectionB2-1"></div>
+			  <div class="sectionB2-2"></div>
+			</div>
+			<div class="sectionB3">
+			  <div class="sectionB3-1"></div>
+			  <div class="sectionB3-2"></div>
+			</div>
+		  </div>
+		</template>
+	  </div>
+	
+  </div>
+
+
+	<script src="https://unpkg.com/iztro/dist/iztro.min.js"></script>
+	<script>
+		function parseQuery() {
+			return Object.fromEntries(new URLSearchParams(window.location.search));
+		}
+
+		function fillForm(params) {
+			for (let key of ['name','year','month','day','hour','minute','location','latitude','longitude']) {
+				if (params[key]) {
+					document.getElementById(key).value = params[key];
+				}
+			}
+			if (params.gender) {
+				document.querySelector(`input[name="gender"][value="${params.gender}"]`)?.click();
+			}
+		}
+
+		function capitalizeFirstLetter(str) {
+			return str.charAt(0).toUpperCase() + str.slice(1);
+		}
+
+		const astro = iztro.astro 
+
+	  	function generateChart(params) {
+			console.log(params)
+			let dob = params.year+'-'+params.month+'-'+params.day
+			const astrolabe = astro.bySolar(dob, 3, params.gender, true, 'en-US');
+			let data = JSON.stringify(astrolabe, null, 2)
+			console.log(astrolabe.palaces.length)
+			let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
+			const container = document.querySelector('.zwds-grid');
+			const tpl = document.getElementById('palace-template').content;
+			for (let i = 0; i <= 11; i++) {
+				let astroData = astrolabe.palaces[indexMap[i]]
+				const cell = document.createElement('div');
+				cell.className = 'p' + i;
+				cell.dataset.palace = i;
+				const clone = tpl.cloneNode(true);
+				clone.querySelector('.sectionA1').textContent = 'P' + i + ' A1';
+				clone.querySelector('.sectionA2').textContent = 'P' + i + ' A2';
+				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
+				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
+				clone.querySelector('.sectionB2-1').textContent = 'P' + i + ' B2-1';
+				clone.querySelector('.sectionB2-2').textContent = 'P' + i + ' B2-2';
+				clone.querySelector('.sectionB3-1').textContent = 'P' + i + ' B3-1';
+				clone.querySelector('.sectionB3-2').textContent = 'P' + i + ' B3-2';
+				cell.appendChild(clone);
+				container.appendChild(cell);
+			}
+			const center = document.createElement('div');
+			center.className = 'p13';
+			center.textContent = '身宮 (Center)';
+			container.appendChild(center);        
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const params = parseQuery();
+			fillForm(params);
+
+			// If URL has enough to plot, auto-draw:
+			if (params.year && params.month && params.day) {
+				generateChart(params);
+			}
+
+			// On form submit → reload with new query string
+			document.getElementById('chartForm').addEventListener('submit', e => {
+				e.preventDefault();
+				const form = new FormData(e.target);
+				const qs = new URLSearchParams(form).toString();
+				window.location.search = qs;
+			});
+		});
+	</script>
+</body>
+</html>
