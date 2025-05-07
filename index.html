@@ -268,14 +268,45 @@
 			return str.charAt(0).toUpperCase() + str.slice(1);
 		}
 
+		function getAgesInRange(origAges, min, max) {
+			// make a copy so we don’t clobber the original
+			const allAges = [...origAges];
+			// find those already in range
+			let inRange = allAges.filter(age => age >= min && age <= max);
+
+			// if none, keep adding 12 to the highest until one falls in range
+			if (inRange.length === 0) {
+				let highest = Math.max(...allAges);
+				// loop until highest is within [min, max]
+				if (max > highest) {
+		      // keep bumping by 12 until we reach at least min
+		      while (highest < min) {
+		        highest += 12;
+		        allAges.push(highest);
+		      }
+		      // re-filter now that we’ve added new data
+		      inRange = allAges.filter(age => age >= min && age <= max);
+		    }
+			}
+
+			return inRange;
+		}
+
+		function palaceNames() {
+			return {
+		    'soul':    'self',
+		    'surface': 'travel',
+		    'spirit':  'mental'
+		  };
+		}
+
 		const astro = iztro.astro 
 
-	  	function generateChart(params) {
-			console.log(params)
+  	function generateChart(params) {
 			let dob = params.year+'-'+params.month+'-'+params.day
 			const astrolabe = astro.bySolar(dob, 3, params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 2)
-			console.log(astrolabe.palaces.length)
+			console.log(data)
 			let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
 			const container = document.querySelector('.zwds-grid');
 			const tpl = document.getElementById('palace-template').content;
@@ -285,17 +316,22 @@
 				cell.className = 'p' + i;
 				cell.dataset.palace = i;
 				const clone = tpl.cloneNode(true);
+				let [min, max] = astroData.decadal.range;
+			
+				let withinRange = getAgesInRange(astroData.ages, min, max) 
+			
 				clone.querySelector('.sectionA1').textContent = 'P' + i + ' A1';
 				clone.querySelector('.sectionA2').textContent = 'P' + i + ' A2';
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
-				clone.querySelector('.sectionB2-1').textContent = 'P' + i + ' B2-1';
+				clone.querySelector('.sectionB2-1').textContent = withinRange.join(', ');
 				clone.querySelector('.sectionB2-2').textContent = 'P' + i + ' B2-2';
-				clone.querySelector('.sectionB3-1').textContent = 'P' + i + ' B3-1';
-				clone.querySelector('.sectionB3-2').textContent = 'P' + i + ' B3-2';
+				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(palaceNames()[astroData.name] ?? astroData.name)
+				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 				cell.appendChild(clone);
 				container.appendChild(cell);
 			}
+
 			const center = document.createElement('div');
 			center.className = 'p13';
 			center.textContent = '身宮 (Center)';
