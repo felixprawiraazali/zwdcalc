@@ -129,6 +129,9 @@
 	  overflow: hidden;
 	  text-align: center;
 	}
+	.selected {
+		background-color: #dddddd !important;
+	}
 	/* Small screens */
 	@media (max-width: 600px) {
 	  .sectionA { flex-direction: column; }
@@ -322,7 +325,7 @@
 
 		const astro = iztro.astro 
 
-		let indexSelectedPalace = 7
+		let defaultIndex = 5
 		let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
 		let astrolabe = null
 
@@ -440,15 +443,20 @@
 		}
 
 		function setPalaceAge(p = null) {
-			if (p != null) {
-				indexSelectedPalace = indexMap[p]
+			if (p == null) {
+				p = defaultIndex
 			}
+			let indexSelectedPalace = indexMap[p]
 			
 			let selectedPalace = astrolabe.palaces[indexSelectedPalace]			
 			let [min, max] = selectedPalace.decadal.range
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 			  let el = document.querySelector(`.zwds-grid .p${i}`);
+			  el.classList.remove('selected')
+			  if (i == p) {
+			  	el.classList.add('selected')
+			  }
 			  let age = getAgesInRange(astroData.ages, min, max)
 			  el.querySelector('.sectionB2-1').textContent = age
 			  if (parseInt(age) > 0) {
