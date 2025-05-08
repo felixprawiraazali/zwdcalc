@@ -247,7 +247,7 @@
   </div>
 
 
-	<script src="https://unpkg.com/iztro/dist/iztro.min.js"></script>
+	<script src="./iztro.js"></script>
 	<script>
 		function parseQuery() {
 			return Object.fromEntries(new URLSearchParams(window.location.search));
@@ -266,6 +266,21 @@
 
 		function capitalizeFirstLetter(str) {
 			return str.charAt(0).toUpperCase() + str.slice(1);
+		}
+
+		function toChineseHourIndex(t) {
+		  let h;
+		  if (t instanceof Date) {
+		    h = t.getHours();
+		  } else if (typeof t === 'string') {
+		    h = parseInt(t.split(':', 1)[0], 10);
+		  } else {
+		    h = Number(t);
+		  }
+		  if (h === 0)   return 12;                 // 00:00–00:59 → late Rat
+		  if (h === 23)  return 0;                  // 23:00–23:59 → early Rat
+		  // 01–22 → floor((h+1)/2) gives 1…11
+		  return Math.floor((h + 1) / 2);
 		}
 
 		function getAgesInRange(origAges, min, max) {
@@ -302,12 +317,20 @@
 
 		const astro = iztro.astro 
 
+		let indexSelectedPalace = 7
+		let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
+		let astrolabe = null
+
   	function generateChart(params) {
 			let dob = params.year+'-'+params.month+'-'+params.day
-			const astrolabe = astro.bySolar(dob, 3, params.gender, true, 'en-US');
+			let timing = params.hour+':'+params.minute
+			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 2)
-			console.log(data)
-			let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
+			
+			let startingPoint = astrolabe.chineseDate.split(' - ')[0].split(' ')[1]
+			let startFrom = 0
+			let direction = 'clockwise'
+
 			const container = document.querySelector('.zwds-grid');
 			const tpl = document.getElementById('palace-template').content;
 			for (let i = 0; i <= 11; i++) {
@@ -317,25 +340,89 @@
 				cell.dataset.palace = i;
 				const clone = tpl.cloneNode(true);
 				let [min, max] = astroData.decadal.range;
-			
-				let withinRange = getAgesInRange(astroData.ages, min, max) 
+
+				if (astroData.earthlyBranch == startingPoint) {
+					startFrom = i
+					if (astroData.ages[0] > astrolabe.palaces[indexMap[i]+1 == 12 ? 0 : indexMap[i] + 1].ages[0]) {
+						direction = 'counter-clockwise'
+					}
+				}
 			
 				clone.querySelector('.sectionA1').textContent = 'P' + i + ' A1';
 				clone.querySelector('.sectionA2').textContent = 'P' + i + ' A2';
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
-				clone.querySelector('.sectionB2-1').textContent = withinRange.join(', ');
+				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = 'P' + i + ' B2-2';
 				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(palaceNames()[astroData.name] ?? astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
+
+				cell.addEventListener('click', function() {
+            setPalaceAge(i)
+        })
 				cell.appendChild(clone);
 				container.appendChild(cell);
-			}
 
+			}
+			
+			for (let i = 0; i <= 11; i++) {
+				let astroData = astrolabe.palaces[indexMap[i]]
+				if (i == startFrom) {
+					astrolabe.palaces[indexMap[i]].ages = []
+					let j = -11
+					while (astrolabe.palaces[indexMap[i]].ages.length < 10) {
+						j += 12
+						astrolabe.palaces[indexMap[i]].ages.push(j)
+					}
+				} else {
+					let distance = 0
+					if (direction == 'clockwise') {
+						let astroStart = indexMap[startFrom]
+						let astroCurrent = indexMap[i]
+						distance = astroCurrent - astroStart
+						if (astroCurrent < astroStart) {
+							distance += 12
+						}
+					} else {
+						let astroStart = indexMap[startFrom]
+						let astroCurrent = indexMap[i]
+						distance = astroStart - astroCurrent
+						if (distance < 0) {
+							distance += 12
+						}						
+					}
+
+					astrolabe.palaces[indexMap[i]].ages = []
+					let j = -11 + distance
+					
+					while (astrolabe.palaces[indexMap[i]].ages.length < 10) {
+						j = j + 12
+						
+						astrolabe.palaces[indexMap[i]].ages.push(j)
+					}
+				}
+			}
+			
+			setPalaceAge()
+			
 			const center = document.createElement('div');
 			center.className = 'p13';
 			center.textContent = '身宮 (Center)';
 			container.appendChild(center);        
+		}
+
+		function setPalaceAge(p = null) {
+			if (p != null) {
+				indexSelectedPalace = indexMap[p]
+			}
+			
+			let selectedPalace = astrolabe.palaces[indexSelectedPalace]			
+			let [min, max] = selectedPalace.decadal.range
+			for (let i = 0; i < 12; i++) {
+				let astroData = astrolabe.palaces[indexMap[i]]
+			  const el = document.querySelector(`.zwds-grid .p${i}`);
+			  el.querySelector('.sectionB2-1').textContent = getAgesInRange(astroData.ages, min, max)
+			}
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
