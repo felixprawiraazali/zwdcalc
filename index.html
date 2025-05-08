@@ -42,9 +42,14 @@
 	  cursor: pointer;
 	  border: 1px solid #555;
 	  background: #fafafa;
-	  transition: background .2s;
-	  overflow: hidden;
+	  transition: background .2s;	  
+	}
+	.zwds-grid > div {
+		overflow: hidden;
 	  padding: var(--item-padding);
+	}
+	.zwds-grid > .p13 {
+		font-size: min(calc(0.8rem + 0.5vw), 16px);
 	}
 	.zwds-grid > div:not(.p13):hover { background: #e8e8e8; }
 	/* Wide layout */
@@ -52,8 +57,7 @@
 	.sectionA1, .sectionA2 {
 	  flex: 1;
 	  display: flex;
-	  font-size: min(calc(0.8rem + 0.5vw), 16px);
-	  
+	  font-size: min(calc(0.8rem + 0.5vw), 16px);	  
 	  text-align: left;
 	}
 	.sectionA1 {
@@ -404,12 +408,35 @@
 				}
 			}
 			
-			setPalaceAge()
-			
 			const center = document.createElement('div');
 			center.className = 'p13';
-			center.textContent = '身宮 (Center)';
-			container.appendChild(center);        
+			center.style.display = 'flex';
+			center.style.justifyContent = 'space-between';
+			center.style.alignItems = 'flex-start'; // Align items to the top
+
+			const leftDiv = document.createElement('div');
+			leftDiv.style.width = '40%';
+			leftDiv.style.textAlign = 'left';
+			leftDiv.className = 'left'
+			leftDiv.innerHTML = `
+				${params.name} <br>
+				${astrolabe.solarDate} <br>
+				${astrolabe.time}
+			`;
+
+			const rightDiv = document.createElement('div');
+			rightDiv.style.width = '40%';
+			rightDiv.style.textAlign = 'right';
+			rightDiv.className = 'right'
+			rightDiv.innerHTML = `
+
+			`;
+
+			center.appendChild(leftDiv);
+			center.appendChild(rightDiv);
+			container.appendChild(center);
+
+			setPalaceAge()
 		}
 
 		function setPalaceAge(p = null) {
@@ -421,13 +448,16 @@
 			let [min, max] = selectedPalace.decadal.range
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
-			  const el = document.querySelector(`.zwds-grid .p${i}`);
+			  let el = document.querySelector(`.zwds-grid .p${i}`);
 			  let age = getAgesInRange(astroData.ages, min, max)
 			  el.querySelector('.sectionB2-1').textContent = age
 			  if (parseInt(age) > 0) {
 			  	el.querySelector('.sectionB2-2').textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
 			  }
 			}
+
+			let el = document.querySelector(`.zwds-grid .p13 .right`);
+			el.innerHTML = `Decadal ${min} - ${max}`
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
