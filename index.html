@@ -326,7 +326,7 @@
 			let timing = params.hour+':'+params.minute
 			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 2)
-			
+			console.log(data)
 			let startingPoint = astrolabe.chineseDate.split(' - ')[0].split(' ')[1]
 			let startFrom = 0
 			let direction = 'clockwise'
@@ -353,7 +353,7 @@
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
 				clone.querySelector('.sectionB2-1').textContent = '';
-				clone.querySelector('.sectionB2-2').textContent = 'P' + i + ' B2-2';
+				clone.querySelector('.sectionB2-2').textContent = '';
 				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(palaceNames()[astroData.name] ?? astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 
@@ -421,7 +421,11 @@
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 			  const el = document.querySelector(`.zwds-grid .p${i}`);
-			  el.querySelector('.sectionB2-1').textContent = getAgesInRange(astroData.ages, min, max)
+			  let age = getAgesInRange(astroData.ages, min, max)
+			  el.querySelector('.sectionB2-1').textContent = age
+			  if (parseInt(age) > 0) {
+			  	el.querySelector('.sectionB2-2').textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
+			  }
 			}
 		}
 
