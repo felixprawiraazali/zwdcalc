@@ -333,8 +333,8 @@
 			let dob = params.year+'-'+params.month+'-'+params.day
 			let timing = params.hour+':'+params.minute
 			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
-			let data = JSON.stringify(astrolabe, null, 2)
-			console.log(data)
+			// let data = JSON.stringify(astrolabe, null, 2)
+			
 			let startingPoint = astrolabe.chineseDate.split(' - ')[0].split(' ')[1]
 			let startFrom = 0
 			let direction = 'clockwise'
