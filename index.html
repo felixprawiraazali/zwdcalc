@@ -52,7 +52,7 @@
 	.sectionA1, .sectionA2 {
 	  flex: 1;
 	  display: flex;
-	  font-size: calc(0.8rem + 0.5vw);
+	  font-size: min(calc(0.8rem + 0.5vw), 16px);
 	  
 	  text-align: left;
 	}
@@ -71,11 +71,12 @@
 	  justify-content: center;
 	  align-items: center;
 	  flex-direction: column;
-	  font-size: calc(0.65rem + 0.5vw);      
+	  font-size: min(calc(0.65rem + 0.5vw), 14px);
 	  text-align: center;
+	  flex: 0 0 20%;
 	}
 	.sectionB1-1, .sectionB1-2 {
-	  font-size: calc(0.65rem + 0.5vw);
+	  font-size: min(calc(0.65rem + 0.5vw), 14px);
 	  
 	  text-align: center;
 	}    
@@ -90,7 +91,7 @@
 	  align-items: center;
 	  justify-content: center;
 	  border-bottom: 1px solid #ccc;
-	  font-size: calc(0.65rem + 0.5vw);
+	  font-size: min(calc(0.65rem + 0.5vw), 14px);
 	  
 	  text-align: center;
 	}
@@ -106,7 +107,7 @@
 	  align-items: center;
 	  justify-content: center;
 	  border-bottom: 1px solid #ccc;
-	  font-size: calc(0.65rem + 0.5vw);
+	  font-size: min(calc(0.65rem + 0.5vw), 14px);
 	  
 	  text-align: center;
 	}
@@ -171,7 +172,7 @@
 	}
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-600">
   <div class="max-w-4xl mx-auto p-6 space-y-8">
 	<!-- Form -->
 	<form id="chartForm" class="bg-white p-6 rounded-lg shadow space-y-6">
