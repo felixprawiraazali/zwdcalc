@@ -122,12 +122,13 @@
 	  grid-area: p13;
 	  background: #e0e0e0;
 	  display: flex;
-	  align-items: center;
-	  justify-content: center;
+	  align-items: flex-start;
+	  justify-content: space-between;
 	  font-size: calc(0.9rem + 0.5vw);
 	  border: 1px solid #555;
 	  overflow: hidden;
 	  text-align: center;
+	  flex-direction: row;
 	}
 	.selected {
 		background-color: #dddddd !important;
@@ -175,6 +176,8 @@
 		  white-space: nowrap;
 		  overflow: hidden;
 		  text-overflow: ellipsis;
+		  flex-direction: column;
+		  justify-content: space-around;
 		}
 	}
   </style>
@@ -412,10 +415,7 @@
 			}
 			
 			const center = document.createElement('div');
-			center.className = 'p13';
-			center.style.display = 'flex';
-			center.style.justifyContent = 'space-between';
-			center.style.alignItems = 'flex-start'; // Align items to the top
+			center.className = 'p13';			
 
 			const leftDiv = document.createElement('div');
 			leftDiv.style.width = '40%';
