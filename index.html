@@ -256,8 +256,8 @@
 			leftDiv.className = 'left'
 			leftDiv.innerHTML = `
 				${params.name} <br>
-				${astrolabe.solarDate} <br>
-				${astrolabe.time}
+				${astrolabe.solarDate} (${currentAge}) <br>
+				${params.hour}:${params.minute} ${astrolabe.time}
 			`;
 
 			const rightDiv = document.createElement('div');
