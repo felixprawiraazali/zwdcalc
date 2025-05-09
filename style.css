@@ -125,6 +125,18 @@ body {
 .selected {
 	background-color: #dddddd !important;
 }
+#custom-menu {
+	position: absolute;
+    display: block;
+    background: white;
+    border: 1px solid rgb(204, 204, 204);
+    padding: 8px;
+    z-index: 9999;
+    left: 801px;
+    top: 699px;
+    display: none;
+    font-size: min(calc(0.65rem + 0.5vw), 14px);
+}
 /* Small screens */
 @media (max-width: 600px) {
 	.sectionA { flex-direction: column; }

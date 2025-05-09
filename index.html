@@ -174,6 +174,17 @@
 
 			const container = document.querySelector('.zwds-grid');
 			const tpl = document.getElementById('palace-template').content;
+
+			const contextMenu = document.createElement('div');
+			contextMenu.id = 'custom-menu';
+			contextMenu.innerHTML = '<div id="transform-option">Transform Decade</div>';
+			document.body.appendChild(contextMenu);
+
+			// Hide menu when clicking outside
+			document.addEventListener('click', () => {
+				contextMenu.style.display = 'none';
+			});
+
 			for (let i = 0; i <= 11; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 				const cell = document.createElement('div');
@@ -201,9 +212,13 @@
 				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(palaceNames()[astroData.name] ?? astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 
-				cell.addEventListener('click', function() {
-            setPalaceAge(i)
-        })
+        cell.addEventListener('contextmenu', function (event) {
+					event.preventDefault();
+					contextMenu.style.display = 'block';
+					contextMenu.style.left = event.pageX + 'px';
+					contextMenu.style.top = event.pageY + 'px';
+					contextMenu.dataset.palaceIndex = i; // Store the index for use on click
+				});
 				cell.appendChild(clone);
 				container.appendChild(cell);
 
@@ -246,6 +261,12 @@
 					}
 				}
 			}
+
+			document.getElementById('transform-option').addEventListener('click', function () {
+				const palaceIndex = contextMenu.dataset.palaceIndex;				
+				setPalaceAge(palaceIndex)
+				contextMenu.style.display = 'none';
+			});
 			
 			const center = document.createElement('div');
 			center.className = 'p13';
