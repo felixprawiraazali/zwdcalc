@@ -78,13 +78,13 @@
 			</div>
 		  </div>
 		</template>
-	  </div>
-	
+	  </div>	
   </div>
 
 
 	<script src="./js/iztro.js"></script>
-	<script>
+	<script src="./js/stars_mapping.js"></script>
+	<script>		
 		function parseQuery() {
 			return Object.fromEntries(new URLSearchParams(window.location.search));
 		}
@@ -186,7 +186,7 @@
 				let [min, max] = astroData.decadal.range;
 
 				if (isWithinRange(currentAge, min, max)) {
-					defaultIndex = i
+					defaultIndex = i					
 				}
 				if (astroData.earthlyBranch == startingPoint) {
 					startFrom = i
@@ -194,9 +194,22 @@
 						direction = 'counter-clockwise'
 					}
 				}
+
+				let major = astroData.majorStars.filter(star => onlyShowStars().includes(star.name))
+				let minor = astroData.minorStars.filter(star => onlyShowStars().includes(star.name))
+
+				let enMajor = major.map(mj => mj.name ?? '')
+				let enMinor = minor.map(mn => mn.name ?? '')
+
+				let zhMajor = major.map(mj => stars.find(star => star.en === mj.name).zh ?? '')
+				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')				
 			
-				clone.querySelector('.sectionA1').textContent = 'P' + i + ' A1';
-				clone.querySelector('.sectionA2').textContent = 'P' + i + ' A2';
+				clone.querySelector('.sectionA1').innerHTML = `
+					${enMajor.map(e => `<span class="major">${e}</span>`).join('')} ${enMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+				`;
+				clone.querySelector('.sectionA2').innerHTML = `
+					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} ${zhMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+				`;
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
 				clone.querySelector('.sectionB2-1').textContent = '';
@@ -286,6 +299,29 @@
 			setPalaceAge()
 		}
 
+		function onlyShowStars() {
+			return [
+				"Zi Wei",
+				"Tian Ji",
+				"Tai Yang",
+				"Wu Qu",
+				"Tian Tong",
+				"Lian Zhen",
+				"Tian Fu",
+				"Tai Yin",
+				"Tan Lang",
+				"Ju Men",
+				"Tian Xiang",
+				"Tian Liang",
+				"Qi Sha",
+				"Po Jun",
+				"Zuo Fu",
+				"You Bi",
+				"Wen Chang",
+				"Wen Qu",
+			]
+		}
+
 		function setPalaceAge(p = null) {
 			if (p == null) {
 				p = defaultIndex
@@ -299,7 +335,7 @@
 			  let el = document.querySelector(`.zwds-grid .p${i}`);
 			  el.classList.remove('selected')
 			  if (i == p) {
-			  	el.classList.add('selected')
+			  	el.classList.add('selected')			  	
 			  }
 			  let age = getAgesInRange(astroData.ages, min, max)
 			  el.querySelector('.sectionB2-1').textContent = age

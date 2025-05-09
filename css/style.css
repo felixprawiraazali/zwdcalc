@@ -51,15 +51,16 @@ body {
 	display: flex;
 	font-size: min(calc(0.8rem + 0.5vw), 16px);     
 	text-align: left;
+	flex-direction: column;
 }
 .sectionA1 {
-	align-items: start;
-	justify-content: start;
+	align-items: flex-start;
+	justify-content: flex-start;
 }
 .sectionA2 { 
 	border-right: none; 
-	align-items: start;
-	justify-content: end;
+	align-items: flex-end;
+	justify-content: flex-start;
 }
 .sectionB { flex: 1; display: flex; }
 .sectionB1 {
@@ -136,6 +137,12 @@ body {
     top: 699px;
     display: none;
     font-size: min(calc(0.65rem + 0.5vw), 14px);
+}
+.major {
+	color: darkblue;
+}
+.minor {
+	color: lightcoral;
 }
 /* Small screens */
 @media (max-width: 600px) {
