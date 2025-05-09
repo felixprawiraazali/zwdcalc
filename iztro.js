@@ -16132,18 +16132,18 @@
           "use strict";
           t.r(n), t.d(n, { default: () => i });
           const i = {
-            soulPalace: "soul",
+            soulPalace: "self",
             bodyPalace: "body",
             siblingsPalace: "siblings",
             spousePalace: "spouse",
             childrenPalace: "children",
             wealthPalace: "wealth",
             healthPalace: "health",
-            surfacePalace: "surface",
+            surfacePalace: "travel",
             friendsPalace: "friends",
             careerPalace: "career",
             propertyPalace: "property",
-            spiritPalace: "spirit",
+            spiritPalace: "mental",
             parentsPalace: "parents",
             originalPalace: "origin",
           };

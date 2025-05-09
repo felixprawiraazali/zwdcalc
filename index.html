@@ -145,14 +145,6 @@
 
 		const isWithinRange = (val, min, max) => val >= min && val <= max;
 
-		function palaceNames() {
-			return {
-		    'soul':    'self',
-		    'surface': 'travel',
-		    'spirit':  'mental'
-		  };
-		}
-
 		const astro = iztro.astro 
 
 		let defaultIndex = 5
@@ -209,7 +201,7 @@
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
 				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = '';
-				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(palaceNames()[astroData.name] ?? astroData.name)
+				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 
         cell.addEventListener('contextmenu', function (event) {
