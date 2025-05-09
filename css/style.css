@@ -129,6 +129,7 @@ body {
 #custom-menu {
 	position: absolute;
     display: block;
+    cursor: pointer;
     background: white;
     border: 1px solid rgb(204, 204, 204);
     padding: 8px;
