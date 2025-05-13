@@ -84,7 +84,16 @@
 
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
-	<script>		
+	<script src="./js/hs_transformation.js"></script>
+	<script>
+		const labelMapping = ["L", "Q", "K", "J"]
+		const labelColors = {
+		  "L": "green",
+		  "Q": "blue",
+		  "K": "orange",
+		  "J": "red"
+		}
+
 		function parseQuery() {
 			return Object.fromEntries(new URLSearchParams(window.location.search));
 		}
@@ -163,7 +172,11 @@
 
 			let currentAge = parseInt(currentYear) - parseInt(params.year) + 1
 
-			let startingPoint = astrolabe.chineseDate.split(' - ')[0].split(' ')[1]
+			let chineseYear = astrolabe.chineseDate.split(' - ')[0]
+			let [heavenlyStem, startingPoint] = chineseYear.split(' ')
+
+			let stars_transformation = transformations[heavenlyStem]
+			
 			let startFrom = 0
 			let direction = 'clockwise'
 
@@ -205,13 +218,27 @@
 				let enMinor = minor.map(mn => mn.name ?? '')
 
 				let zhMajor = major.map(mj => stars.find(star => star.en === mj.name).zh ?? '')
-				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')				
-			
+				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')
+
+				const markedNames = enMajor.map(e => {
+		      const matched = stars_transformation
+		        .map((word, index) => e.toLowerCase().includes(word.toLowerCase()) ? index : null)
+		        .filter(i => i !== null);
+
+		      const nameWithIndexes = matched.length > 0
+				    ? `${e} ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">[${labelMapping[i]}]</label>`).join(", ")}`
+				    : e;
+
+		      return `<span class="major">${nameWithIndexes}</span>`;
+		    }).join('');
+							
 				clone.querySelector('.sectionA1').innerHTML = `
-					${enMajor.map(e => `<span class="major">${e}</span>`).join('')} ${enMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+					${markedNames} 
+					${enMinor.map(e => `<span class="minor">${e}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionA2').innerHTML = `
-					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} ${zhMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} 
+					${zhMinor.map(e => `<span class="minor">${e}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
