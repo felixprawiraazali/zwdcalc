@@ -9,84 +9,84 @@
 </head>
 <body class="bg-gray-100 text-gray-600">
   <div class="max-w-4xl mx-auto p-6 space-y-8">
-	<!-- Form -->
-	<form id="chartForm" class="bg-white p-6 rounded-lg shadow space-y-6">
-	  <h2 class="text-2xl font-semibold">Plot Zi Wei Dou Shu Chart</h2>
+		<!-- Form -->
+		<form id="chartForm" class="bg-white p-6 rounded-lg shadow space-y-6">
+		  <h2 class="text-2xl font-semibold">Plot Zi Wei Dou Shu Chart</h2>
 
-	  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-			<!-- Name -->
-			<div>
-			  <label class="block font-medium">Name</label>
-			  <input id="name" name="name" type="text"
-					 class="mt-1 w-full border rounded p-2"
-					 placeholder="e.g. Felix Prawira">
-			</div>
+		  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<!-- Name -->
+				<div>
+				  <label class="block font-medium">Name</label>
+				  <input id="name" name="name" type="text"
+						 class="mt-1 w-full border rounded p-2"
+						 placeholder="e.g. Felix Prawira">
+				</div>
 
-			<!-- Birth Date -->
-			<div class="space-y-1">
-			  <label class="block font-medium">Birth Date</label>
-			  <div class="flex gap-2">
-				<input id="year"  name="year"  type="number" placeholder="YYYY" class="w-1/3 border rounded p-2">
-				<input id="month" name="month" type="number" placeholder="MM"   class="w-1/3 border rounded p-2">
-				<input id="day"   name="day"   type="number" placeholder="DD"   class="w-1/3 border rounded p-2">
-			  </div>
-			</div>
+				<!-- Birth Date -->
+				<div class="space-y-1">
+				  <label class="block font-medium">Birth Date</label>
+				  <div class="flex gap-2">
+					<input id="year"  name="year"  type="number" placeholder="YYYY" class="w-1/3 border rounded p-2">
+					<input id="month" name="month" type="number" placeholder="MM"   class="w-1/3 border rounded p-2">
+					<input id="day"   name="day"   type="number" placeholder="DD"   class="w-1/3 border rounded p-2">
+				  </div>
+				</div>
 
-			<!-- Birth Time -->
-			<div class="space-y-1">
-			  <label class="block font-medium">Birth Time</label>
-			  <div class="flex gap-2">
-				<input id="hour"   name="hour"   type="number" placeholder="HH" class="w-1/2 border rounded p-2">
-				<input id="minute" name="minute" type="number" placeholder="MM" class="w-1/2 border rounded p-2">
-			  </div>
-			</div>
+				<!-- Birth Time -->
+				<div class="space-y-1">
+				  <label class="block font-medium">Birth Time</label>
+				  <div class="flex gap-2">
+					<input id="hour"   name="hour"   type="number" placeholder="HH" class="w-1/2 border rounded p-2">
+					<input id="minute" name="minute" type="number" placeholder="MM" class="w-1/2 border rounded p-2">
+				  </div>
+				</div>
 
-			<!-- Gender -->
-			<div>
-			  <label class="block font-medium">Gender</label>
-			  <div class="mt-1 flex gap-4">
-				<label><input type="radio" name="gender" value="male"> Male</label>
-				<label><input type="radio" name="gender" value="female"> Female</label>
-			  </div>
-			</div> 
+				<!-- Gender -->
+				<div>
+				  <label class="block font-medium">Gender</label>
+				  <div class="mt-1 flex gap-4">
+					<label><input type="radio" name="gender" value="male"> Male</label>
+					<label><input type="radio" name="gender" value="female"> Female</label>
+				  </div>
+				</div> 
 
-    	<!-- Reference Year Dropdown -->
-			<div>
-	      <label class="block font-medium">Reference Year</label>
-	      <select id="refYear" name="refYear" class="mt-1 w-full border rounded p-2"></select>
-	    </div>       
-	  </div>
-
-	  <button type="submit"
-			  class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-		Plot Chart
-	  </button>
-	</form>
-
-	  <div class="zwds-grid">
-		<template id="palace-template">
-		  <div class="sectionA">
-			<div class="sectionA1"></div>
-			<div class="sectionA2"></div>
+	    	<!-- Reference Year Dropdown -->
+				<div>
+		      <label class="block font-medium">Reference Year</label>
+		      <select id="refYear" name="refYear" class="mt-1 w-full border rounded p-2"></select>
+		    </div>       
 		  </div>
-		  <div class="sectionB">
-			<div class="sectionB1">
-			  <div class="sectionB1-1"></div>
-			  <div class="sectionB1-2"></div>
-			</div>
-			<div class="sectionB2">
-			  <div class="sectionB2-1"></div>
-			  <div class="sectionB2-2"></div>
-			</div>
-			<div class="sectionB3">
-			  <div class="sectionB3-1"></div>
-			  <div class="sectionB3-2"></div>
-			</div>
-		  </div>
-		</template>
+
+		  <button type="submit"
+				  class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+				Plot Chart
+		  </button>
+		</form>
+
+  	<div class="zwds-grid">
+			<template id="palace-template">
+			  <div class="sectionA">
+				<div class="sectionA1"></div>
+				<div class="sectionA2"></div>
+			  </div>
+			  <div class="sectionB">
+				<div class="sectionB1">
+				  <div class="sectionB1-1"></div>
+				  <div class="sectionB1-2"></div>
+				</div>
+				<div class="sectionB2">
+				  <div class="sectionB2-1"></div>
+				  <div class="sectionB2-2"></div>
+				</div>
+				<div class="sectionB3">
+				  <div class="sectionB3-1"></div>
+				  <div class="sectionB3-2"></div>
+				</div>
+			  </div>
+			</template>
+			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
 	  </div>	
   </div>
-
 
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
@@ -219,7 +219,9 @@
 				let astroData = astrolabe.palaces[indexMap[i]]
 				const cell = document.createElement('div');
 				cell.className = 'p' + i;
+				cell.id = 'p' + i;
 				cell.dataset.palace = i;
+				cell.dataset.heavenlyStem = astroData.decadal.heavenlyStem
 				const clone = tpl.cloneNode(true);
 				let [min, max] = astroData.decadal.range;
 
@@ -258,12 +260,12 @@
 					  return st ? ` <label style="color: ${labelColors[st]};">${circleMap[st]}</label>` : "";
 					})();
 
-		      return `<span class="major ${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
+		      return `<span class="major" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
 		    }).join('');
 							
 				clone.querySelector('.sectionA1').innerHTML = `
 					${markedNames} 
-					${minor.map(e => `<span class="minor ${e.key}">${e.en}</span>`).join('')}
+					${minor.map(e => `<span class="minor" id="${e.key}">${e.en}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionA2').innerHTML = `
 					${major.map(e => `<span class="major">${e.zh}</span>`).join('')} 
@@ -276,6 +278,10 @@
 				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 
+				cell.addEventListener('click', function() {
+            setTransformationArrow(i)
+        })
+
         cell.addEventListener('contextmenu', function (event) {
 					event.preventDefault();
 					contextMenu.style.display = 'block';
@@ -285,7 +291,6 @@
 				});
 				cell.appendChild(clone);
 				container.appendChild(cell);
-
 			}
 			
 			for (let i = 0; i <= 11; i++) {
@@ -355,7 +360,7 @@
 			center.appendChild(rightDiv);
 			container.appendChild(center);
 
-			setPalaceAge()
+			setPalaceAge()			
 		}
 
 		function onlyShowStars() {
@@ -410,13 +415,12 @@
 			`
 		}
 
-		function getTransformationType(stemKey, starName) {			
-		  const types = ["L", "Q", "K", "J"]; // Lu, Quan, Ke, Ji		  
-		  const entry = self_transforms[stemKey+"Heavenly"];
+		function getTransformationType(stemKey, starName) {
+		  const entry = transforms[stemKey+"Heavenly"];
 		  if (!entry || !entry.mutagen) return null;
 
 		  const index = entry.mutagen.indexOf(starName);
-		  return index !== -1 ? `${types[index]}` : null;
+		  return index !== -1 ? `${labelMapping[index]}` : null;
 		}
 
 		function getChineseYearPinyin(gregorianYear) {
@@ -430,6 +434,67 @@
 		  const branchIndex = (offset % 12 + 12) % 12;
 
 		  return [heavenlyStems[stemIndex], earthlyBranches[branchIndex]];
+		}
+
+		function setTransformationArrow(i) {
+		  const svg = document.getElementById("lineLayer");
+  		if (svg) svg.innerHTML = '';
+
+			let id = `p${i}`
+			let heavenlyStem = document.getElementById(id).dataset.heavenlyStem
+			let stemData = transforms[heavenlyStem+"Heavenly"]
+			if (!stemData || !stemData.mutagen) {
+				return null
+			}
+
+			stemData.mutagen.forEach((target, index) => {
+				if (index !== -1) {
+					let color = labelColors[labelMapping[index]]
+					
+					drawMultipleLines(id, [target], color)
+					window.addEventListener('resize', () => {
+						if (index == 0) {
+							svg.innerHTML = '';
+						}
+					  drawMultipleLines(id, [target], color)
+					});
+				}
+			})
+		}
+
+		function drawMultipleLines(fromId, toIds, color, dash = false) {
+		  const container = document.querySelector('.zwds-grid');
+		  const svg = document.getElementById("lineLayer");
+		  // svg.innerHTML = ''; // Clear previous lines
+
+		  const containerRect = container.getBoundingClientRect();
+		  const fromEl = document.getElementById(fromId);
+		  if (!fromEl) return;
+
+		  const fromBox = fromEl.getBoundingClientRect();
+		  const x1 = fromBox.left + fromBox.width / 2 - containerRect.left;
+		  const y1 = fromBox.top + fromBox.height / 2 - containerRect.top;
+
+		  toIds.forEach(toId => {
+		    const toEl = document.getElementById(toId);
+		    if (!toEl) return;
+
+		    const toBox = toEl.getBoundingClientRect();
+		    const x2 = toBox.right - containerRect.left; // right edge
+		    const y2 = toBox.top + toBox.height / 2 - containerRect.top; // vertical center
+
+		    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		    line.setAttribute("x1", x1);
+		    line.setAttribute("y1", y1);
+		    line.setAttribute("x2", x2);
+		    line.setAttribute("y2", y2);
+		    line.setAttribute("stroke", color);
+		    line.setAttribute("stroke-width", "1");
+		    if (dash) {
+		    	line.setAttribute("stroke-dasharray", "5,3")
+		    }
+		    svg.appendChild(line);
+		  });
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {

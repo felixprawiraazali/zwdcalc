@@ -1,4 +1,4 @@
-const self_transforms = {
+const transforms = {
 	jiaHeavenly: {
       yinYang: "阳",
       fiveElements: "木",

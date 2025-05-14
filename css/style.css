@@ -11,6 +11,18 @@ body {
 	font-family: sans-serif;
 }
 .zwds-grid {
+  position: relative; /* Required for SVG to align properly */
+}
+#lineLayer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.zwds-grid {
 	width: min(90vw, 93vh);
 	max-width: 100vw;
 	aspect-ratio: 1;
