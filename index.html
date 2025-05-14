@@ -118,6 +118,26 @@
 		  "J": "red"
 		}
 
+		const oppositeLink = {
+			0 : 11,
+			1 : 10,
+			2 : 9,
+			3 : 8,
+			4 : 7,
+			5 : 6 
+		}
+
+		function getOpposite(index) {
+		  if (oppositeLink.hasOwnProperty(index)) return oppositeLink[index];
+
+		  // Search in values if index is not a key
+		  for (const [key, value] of Object.entries(oppositeLink)) {
+		    if (Number(value) === index) return Number(key);
+		  }
+
+		  return null; // not found
+		}
+
 		function parseQuery() {
 			return Object.fromEntries(new URLSearchParams(window.location.search));
 		}
@@ -436,7 +456,7 @@
 		  return [heavenlyStems[stemIndex], earthlyBranches[branchIndex]];
 		}
 
-		function setTransformationArrow(i) {
+		function setTransformationArrow(i) {			
 		  const svg = document.getElementById("lineLayer");
   		if (svg) svg.innerHTML = '';
 
@@ -451,6 +471,11 @@
 				if (index !== -1) {
 					let color = labelColors[labelMapping[index]]
 					
+					if (index == 3) {						
+						let target_id = document.getElementById(target).parentElement.parentElement.parentElement.id
+						let opposite = getOpposite(parseInt(target_id.slice(1), 10))
+						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+					}
 					drawMultipleLines(id, [target], color)
 					window.addEventListener('resize', () => {
 						if (index == 0) {
@@ -462,26 +487,44 @@
 			})
 		}
 
-		function drawMultipleLines(fromId, toIds, color, dash = false) {
+		function drawMultipleLines(fromId, toIds, color, dash = false, targetSide = 'right', fromSide = 'center') {
 		  const container = document.querySelector('.zwds-grid');
 		  const svg = document.getElementById("lineLayer");
-		  // svg.innerHTML = ''; // Clear previous lines
+		  // svg.innerHTML = ''; // optional: clear all lines first
 
 		  const containerRect = container.getBoundingClientRect();
 		  const fromEl = document.getElementById(fromId);
 		  if (!fromEl) return;
 
 		  const fromBox = fromEl.getBoundingClientRect();
-		  const x1 = fromBox.left + fromBox.width / 2 - containerRect.left;
-		  const y1 = fromBox.top + fromBox.height / 2 - containerRect.top;
+
+		  let x1, y1;
+
+		  if (fromSide === 'right') {
+		    x1 = fromBox.right - containerRect.left;
+		    y1 = fromBox.top + fromBox.height / 2 - containerRect.top;
+		  } else {
+		    // default to center
+		    x1 = fromBox.left + fromBox.width / 2 - containerRect.left;
+		    y1 = fromBox.top + fromBox.height / 2 - containerRect.top;
+		  }
 
 		  toIds.forEach(toId => {
 		    const toEl = document.getElementById(toId);
 		    if (!toEl) return;
 
 		    const toBox = toEl.getBoundingClientRect();
-		    const x2 = toBox.right - containerRect.left; // right edge
-		    const y2 = toBox.top + toBox.height / 2 - containerRect.top; // vertical center
+
+		    let x2, y2;
+
+		    if (targetSide === 'right') {
+		      x2 = toBox.right - containerRect.left;
+		      y2 = toBox.top + toBox.height / 2 - containerRect.top;
+		    } else {
+		      // default to center
+		      x2 = toBox.left + toBox.width / 2 - containerRect.left;
+		      y2 = toBox.top + toBox.height / 2 - containerRect.top;
+		    }
 
 		    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 		    line.setAttribute("x1", x1);
@@ -491,7 +534,7 @@
 		    line.setAttribute("stroke", color);
 		    line.setAttribute("stroke-width", "1");
 		    if (dash) {
-		    	line.setAttribute("stroke-dasharray", "5,3")
+		      line.setAttribute("stroke-dasharray", "5,5");
 		    }
 		    svg.appendChild(line);
 		  });
