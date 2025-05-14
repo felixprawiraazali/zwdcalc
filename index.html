@@ -475,7 +475,11 @@
 						let target_id = document.getElementById(target).parentElement.parentElement.parentElement.id
 						let opposite = getOpposite(parseInt(target_id.slice(1), 10))
 						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+						window.addEventListener('resize', () => {
+							drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+						})
 					}
+					
 					drawMultipleLines(id, [target], color)
 					window.addEventListener('resize', () => {
 						if (index == 0) {
