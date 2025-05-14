@@ -233,16 +233,15 @@
 					}
 				}
 
-				let major = astroData.majorStars.filter(star => onlyShowStars().includes(star.name))
-				let minor = astroData.minorStars.filter(star => onlyShowStars().includes(star.name))
+				let major = astroData.majorStars
+					.filter(star => onlyShowStars().includes(star.name))
+					.map(mj => stars.find(star => star.en === mj.name) ?? '')
 
-				let enMajor = major.map(mj => stars.find(star => star.en === mj.name) ?? '')
-				let enMinor = minor.map(mn => stars.find(star => star.en === mn.name) ?? '')
+				let minor = astroData.minorStars
+					.filter(star => onlyShowStars().includes(star.name))
+					.map(mn => stars.find(star => star.en === mn.name) ?? '')
 
-				let zhMajor = major.map(mj => stars.find(star => star.en === mj.name).zh ?? '')
-				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')
-
-				const markedNames = enMajor.map(e => {
+				const markedNames = major.map(e => {
 				  const heavenly_transformation = (() => {
 					  const st = getTransformationType(heavenlyStem, e.key);
 					  return st ? ` <label style="color: ${labelColors[st]};">${st}</label>` : "";
@@ -264,11 +263,11 @@
 							
 				clone.querySelector('.sectionA1').innerHTML = `
 					${markedNames} 
-					${enMinor.map(e => `<span class="minor ${e.key}">${e.en}</span>`).join('')}
+					${minor.map(e => `<span class="minor ${e.key}">${e.en}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionA2').innerHTML = `
-					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} 
-					${zhMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+					${major.map(e => `<span class="major">${e.zh}</span>`).join('')} 
+					${minor.map(e => `<span class="minor">${e.zh}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
