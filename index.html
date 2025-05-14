@@ -84,8 +84,7 @@
 
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
-	<script src="./js/hs_transformation.js"></script>
-	<script src="./js/self_transformation.js"></script>
+	<script src="./js/transformation.js"></script>
 	<script>
 		const labelMapping = ["L", "Q", "K", "J"]
 		const labelColors = {
@@ -176,8 +175,6 @@
 			let chineseYear = astrolabe.chineseDate.split(' - ')[0]
 			let [heavenlyStem, startingPoint] = chineseYear.split(' ')
 
-			let stars_transformation = transformations[heavenlyStem]
-			
 			let startFrom = 0
 			let direction = 'clockwise'
 
@@ -222,16 +219,13 @@
 				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')
 
 				const markedNames = enMajor.map(e => {
-		      const matched = stars_transformation
-		        .map((word, index) => new RegExp(`\\b${word}\\b`, 'i').test(e.en) ? index : null)
-		        .filter(i => i !== null);
-
-		      const heavenly_transformation = matched.length > 0
-				    ? ` ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">${labelMapping[i]}</label>`).join(", ")}`
-				    : '';
+				  const heavenly_transformation = (() => {
+					  const st = getTransformationType(heavenlyStem, e.key);
+					  return st ? ` <label style="color: ${labelColors[st]};">${st}</label>` : "";
+					})();
 
 				  const self_transformation = (() => {
-					  const st = getTransformationTypeWithArrow(astroData.decadal.heavenlyStem, e.key);
+					  const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
 					  return st ? ` <label style="color: ${labelColors[st]};">${st}↑</label>` : "";
 					})();
 
@@ -385,7 +379,7 @@
 			el.innerHTML = `Decade ${min} - ${max}`
 		}
 
-		function getTransformationTypeWithArrow(stemKey, starName) {			
+		function getTransformationType(stemKey, starName) {			
 		  const types = ["L", "Q", "K", "J"]; // Lu, Quan, Ke, Ji		  
 		  const entry = self_transforms[stemKey+"Heavenly"];
 		  if (!entry || !entry.mutagen) return null;
