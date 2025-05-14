@@ -227,7 +227,7 @@
 		        .filter(i => i !== null);
 
 		      const heavenly_transformation = matched.length > 0
-				    ? ` ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">[${labelMapping[i]}]</label>`).join(", ")}`
+				    ? ` ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">${labelMapping[i]}</label>`).join(", ")}`
 				    : '';
 
 				  const self_transformation = (() => {
