@@ -222,7 +222,7 @@
 
 				const markedNames = enMajor.map(e => {
 		      const matched = stars_transformation
-		        .map((word, index) => e.toLowerCase().includes(word.toLowerCase()) ? index : null)
+		        .map((word, index) => new RegExp(`\\b${word}\\b`, 'i').test(e) ? index : null)
 		        .filter(i => i !== null);
 
 		      const nameWithIndexes = matched.length > 0
@@ -366,7 +366,7 @@
 			  el.classList.remove('selected')
 			  if (i == p) {
 			  	el.classList.add('selected')
-			  	// console.log(JSON.stringify(astroData, true, 2))
+			  	console.log(JSON.stringify(astroData, true, 2))
 			  }
 			  let age = getAgesInRange(astroData.ages, min, max)
 			  el.querySelector('.sectionB2-1').textContent = age
