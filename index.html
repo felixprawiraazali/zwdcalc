@@ -85,6 +85,7 @@
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
 	<script src="./js/hs_transformation.js"></script>
+	<script src="./js/self_transformation.js"></script>
 	<script>
 		const labelMapping = ["L", "Q", "K", "J"]
 		const labelColors = {
@@ -214,27 +215,32 @@
 				let major = astroData.majorStars.filter(star => onlyShowStars().includes(star.name))
 				let minor = astroData.minorStars.filter(star => onlyShowStars().includes(star.name))
 
-				let enMajor = major.map(mj => mj.name ?? '')
-				let enMinor = minor.map(mn => mn.name ?? '')
+				let enMajor = major.map(mj => stars.find(star => star.en === mj.name) ?? '')
+				let enMinor = minor.map(mn => stars.find(star => star.en === mn.name) ?? '')
 
 				let zhMajor = major.map(mj => stars.find(star => star.en === mj.name).zh ?? '')
 				let zhMinor = minor.map(mn => stars.find(star => star.en === mn.name).zh ?? '')
 
 				const markedNames = enMajor.map(e => {
 		      const matched = stars_transformation
-		        .map((word, index) => new RegExp(`\\b${word}\\b`, 'i').test(e) ? index : null)
+		        .map((word, index) => new RegExp(`\\b${word}\\b`, 'i').test(e.en) ? index : null)
 		        .filter(i => i !== null);
 
-		      const nameWithIndexes = matched.length > 0
-				    ? `${e} ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">[${labelMapping[i]}]</label>`).join(", ")}`
-				    : e;
+		      const heavenly_transformation = matched.length > 0
+				    ? ` ${matched.map(i => `<label style="color: ${labelColors[labelMapping[i]]};">[${labelMapping[i]}]</label>`).join(", ")}`
+				    : '';
 
-		      return `<span class="major">${nameWithIndexes}</span>`;
+				  const self_transformation = (() => {
+					  const st = getTransformationTypeWithArrow(astroData.decadal.heavenlyStem, e.key);
+					  return st ? ` <label style="color: ${labelColors[st]};">${st}↑</label>` : "";
+					})();
+
+		      return `<span class="major">${e.en}${heavenly_transformation}${self_transformation}</span>`;
 		    }).join('');
 							
 				clone.querySelector('.sectionA1').innerHTML = `
 					${markedNames} 
-					${enMinor.map(e => `<span class="minor">${e}</span>`).join('')}
+					${enMinor.map(e => `<span class="minor">${e.en}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionA2').innerHTML = `
 					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} 
@@ -366,7 +372,7 @@
 			  el.classList.remove('selected')
 			  if (i == p) {
 			  	el.classList.add('selected')
-			  	console.log(JSON.stringify(astroData, true, 2))
+			  	// console.log(JSON.stringify(astroData, true, 2))
 			  }
 			  let age = getAgesInRange(astroData.ages, min, max)
 			  el.querySelector('.sectionB2-1').textContent = age
@@ -377,6 +383,15 @@
 
 			let el = document.querySelector(`.zwds-grid .p13 .right`);
 			el.innerHTML = `Decade ${min} - ${max}`
+		}
+
+		function getTransformationTypeWithArrow(stemKey, starName) {			
+		  const types = ["L", "Q", "K", "J"]; // Lu, Quan, Ke, Ji		  
+		  const entry = self_transforms[stemKey+"Heavenly"];
+		  if (!entry || !entry.mutagen) return null;
+
+		  const index = entry.mutagen.indexOf(starName);
+		  return index !== -1 ? `${types[index]}` : null;
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
