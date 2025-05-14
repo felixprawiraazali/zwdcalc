@@ -229,12 +229,12 @@
 					  return st ? ` <label style="color: ${labelColors[st]};">${st}↑</label>` : "";
 					})();
 
-		      return `<span class="major">${e.en}${heavenly_transformation}${self_transformation}</span>`;
+		      return `<span class="major ${e.key}">${e.en}${heavenly_transformation}${self_transformation}</span>`;
 		    }).join('');
 							
 				clone.querySelector('.sectionA1').innerHTML = `
 					${markedNames} 
-					${enMinor.map(e => `<span class="minor">${e.en}</span>`).join('')}
+					${enMinor.map(e => `<span class="minor ${e.key}">${e.en}</span>`).join('')}
 				`;
 				clone.querySelector('.sectionA2').innerHTML = `
 					${zhMajor.map(e => `<span class="major">${e}</span>`).join('')} 
