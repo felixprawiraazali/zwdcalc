@@ -94,7 +94,7 @@
 			</svg>
 			<svg id="shortLineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none">
 				<defs>
-			    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+			    <marker id="arrowShort" viewBox="0 0 10 10" refX="10" refY="5"
             markerWidth="6" markerHeight="6" orient="auto-start-reverse">
 			      <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
 			    </marker>
@@ -126,48 +126,27 @@
 	    refYearSelect.appendChild(option);
 	  }
 
-		const labelMapping = ["L", "Q", "K", "J"]
-		const labelColors = {
-		  "L": "green",
-		  "Q": "blue",
-		  "K": "orange",
-		  "J": "red"
-		}
+		const labels = [
+		  { code: "L", color: "green", circle: "Ⓛ"},
+		  { code: "Q", color: "blue", circle: "Ⓠ" },
+		  { code: "K", color: "orange", circle: "Ⓚ" },
+		  { code: "J", color: "red", circle: "Ⓙ" }
+		];
 
-		const oppositeLink = {
-			0 : 11,
-			1 : 10,
-			2 : 9,
-			3 : 8,
-			4 : 7,
-			5 : 6 
-		}
-
-		const oppositeDirection = [
-			"bottom-right",
-			"bottom",
-			"bottom",
-			"bottom-left",
-			"right",
-			"left",
-			"right",
-			"left",
-			"top-right",
-			"top",
-			"top",
-			"top-left"
-		]
-
-		function getOpposite(index) {
-		  if (oppositeLink.hasOwnProperty(index)) return oppositeLink[index];
-
-		  // Search in values if index is not a key
-		  for (const [key, value] of Object.entries(oppositeLink)) {
-		    if (Number(value) === index) return Number(key);
-		  }
-
-		  return null; // not found
-		}
+		const palaceOpposites = [
+			{ opposite: 11, direction: "bottom-right" },
+			{ opposite: 10, direction: "bottom" },
+			{ opposite: 9,  direction: "bottom" },
+			{ opposite: 8,  direction: "bottom-left" },
+			{ opposite: 7,  direction: "right" },
+			{ opposite: 6,  direction: "left" },
+			{ opposite: 5,  direction: "right" },
+			{ opposite: 4,  direction: "left" },
+			{ opposite: 3,  direction: "top-right" },
+			{ opposite: 2,  direction: "top" },
+			{ opposite: 1,  direction: "top" },
+			{ opposite: 0,  direction: "top-left" }
+		];
 
 		function parseQuery() {
 			return Object.fromEntries(new URLSearchParams(window.location.search));
@@ -197,8 +176,8 @@
 		  } else {
 		    h = Number(t);
 		  }
-		  if (h === 0)   return 0;                 // 00:00–00:59 → late Rat
-		  if (h === 23)  return 12;                  // 23:00–23:59 → early Rat
+		  if (h === 0)   return 0;                 // 00:00–00:59 → early Rat
+		  if (h === 23)  return 12;                  // 23:00–23:59 → late Rat
 		  // 01–22 → floor((h+1)/2) gives 1…11
 		  
 		  return Math.floor((h + 1) / 2);
@@ -236,7 +215,23 @@
 		let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
 		let astrolabe = null
 
+		const lineRedrawQueue = [];
+		function registerResizeRedraw(fn) {
+		  lineRedrawQueue.push(fn);
+		}
+
+		function redrawAllLines() {
+		  document.getElementById("lineLayer")?.querySelectorAll("line").forEach(line => line.remove());
+		  document.getElementById("shortLineLayer")?.querySelectorAll("line").forEach(line => line.remove());
+		  lineRedrawQueue.forEach(fn => fn());
+		}
+
+		function clearLineRedrawQueue() {
+		  lineRedrawQueue.length = 0
+		}
+
   	function generateChart(params) {
+  		clearLineRedrawQueue()
   		cn_year = getChineseYearPinyin(params.refYear)
 			let dob = params.year+'-'+params.month+'-'+params.day
 			let timing = params.hour+':'+params.minute
@@ -247,13 +242,14 @@
 
 			let currentAge = parseInt(params.refYear) - parseInt(params.year) + 1
 
-			let chineseYear = astrolabe.chineseDate.split(' - ')[0]
+			const chineseYear = astrolabe.chineseDate.split(' - ')[0]
 			let [heavenlyStem, startingPoint] = chineseYear.split(' ')
 
 			let startFrom = 0
 			let direction = 'clockwise'
 
 			const container = document.querySelector('.zwds-grid');
+			container.querySelectorAll("div:not(#lineLayer):not(#shortLineLayer)").forEach(el => el.remove());
 			const tpl = document.getElementById('palace-template').content;
 
 			const contextMenu = document.createElement('div');
@@ -297,18 +293,17 @@
 				const markedNames = major.map(e => {
 				  const heavenly_transformation = (() => {
 					  const st = getTransformationType(heavenlyStem, e.key);
-					  return st ? ` <label style="color: ${labelColors[st]};">${st}</label>` : "";
+					  return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}</label>` : "";
 					})();
 
 				  const self_transformation = (() => {
 					  const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
-					  return st ? ` <label style="color: ${labelColors[st]};">${st}↑</label>` : "";
+					  return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}↑</label>` : "";
 					})();
 
 					const yearly_transformation = (() => {
 					  const st = getTransformationType(cn_year[0], e.key);
-					  const circleMap = { L: 'Ⓛ', Q: 'Ⓠ', K: 'Ⓚ', J: 'Ⓙ' };
-					  return st ? ` <label style="color: ${labelColors[st]};">${circleMap[st]}</label>` : "";
+					  return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].circle}</label>` : "";
 					})();
 
 		      return `<span class="major" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
@@ -460,7 +455,7 @@
 
 			let el = document.querySelector(`.zwds-grid .p13 .right`);
 			el.innerHTML = `
-				Decade ${min} - ${max}				
+				Decade ${min} - ${max}
 			`
 		}
 
@@ -469,7 +464,7 @@
 		  if (!entry || !entry.mutagen) return null;
 
 		  const index = entry.mutagen.indexOf(starName);
-		  return index !== -1 ? `${labelMapping[index]}` : null;
+		  return index !== -1 ? index : null;
 		}
 
 		function getChineseYearPinyin(gregorianYear) {
@@ -507,19 +502,19 @@
 
 			stemData.mutagen.forEach((target, index) => {
 				if (index !== -1) {
-					let color = labelColors[labelMapping[index]]
+					let color = labels[index].color
 					
 					if (index == 3) {						
-						let target_id = document.getElementById(target).parentElement.parentElement.parentElement.id
-						let opposite = getOpposite(parseInt(target_id.slice(1), 10))
+						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.palace						
+						let opposite = palaceOpposites[parseInt(target_id)].opposite
 						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
-						window.addEventListener('resize', () => {
+						registerResizeRedraw(() => {
 							drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
 						})
 					}
 					
 					drawMultipleLines(id, [target], color)
-					window.addEventListener('resize', () => {
+					registerResizeRedraw(() => {
 						if (index == 0) {
 							svg.querySelectorAll("line").forEach(line => line.remove());
 						}
@@ -616,7 +611,8 @@
 		    if (dash) {
 		      line.setAttribute("stroke-dasharray", "5,3");
 		    }
-		    line.setAttribute("marker-end", "url(#arrow)");
+		    let arrow = template == 'lineLayer' ? 'arrow' : 'arrowShort'
+		    line.setAttribute("marker-end", `url(#${arrow})`);
 		    svg.appendChild(line);
 		  });
 		}
@@ -625,7 +621,7 @@
 			let first_draw = -1
 			for (let i = 0; i < 12; i++) {
 				let id = `p${i}`
-				let opposite = getOpposite(i)
+				let opposite = palaceOpposites[i].opposite
 
 				let heavenlyStem = document.getElementById(id).dataset.heavenlyStem
 				let stemData = transforms[heavenlyStem+"Heavenly"]
@@ -635,19 +631,20 @@
 
 				stemData.mutagen.forEach((target, index) => {
 					if (index !== -1) {
-						let color = labelColors[labelMapping[index]]
-						let target_id = document.getElementById(target).parentElement.parentElement.parentElement.id
-						if (target_id == `p${opposite}`) {
+						let color = labels[index].color
+						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.palace
+						if (target_id == opposite) {
 							if (first_draw == -1) {
  								first_draw = i
 							}
-							drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '5%', 'shortLineLayer')
-							window.addEventListener('resize', () => {
+
+							drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', 'shortLineLayer')
+							registerResizeRedraw(() => {
 								if (i == first_draw) {
 									const svg = document.getElementById("shortLineLayer");									
 									svg.querySelectorAll("line").forEach(line => line.remove());
 								}
-								drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '5%', 'shortLineLayer')
+								drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', 'shortLineLayer')
 							})
 						}
 					}
@@ -670,6 +667,14 @@
 				const form = new FormData(e.target);
 				const qs = new URLSearchParams(form).toString();
 				window.location.search = qs;
+			});
+
+			let resizeTimeout;
+			window.addEventListener('resize', () => {
+			  clearTimeout(resizeTimeout);
+			  resizeTimeout = setTimeout(() => {
+			    requestAnimationFrame(redrawAllLines);
+			  }, 50);
 			});
 		});
 	</script>
