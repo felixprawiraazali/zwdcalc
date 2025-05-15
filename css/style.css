@@ -55,7 +55,7 @@ body {
 .zwds-grid > .p13 {
 	font-size: min(calc(0.8rem + 0.5vw), 16px);
 	grid-area: p13;
-	background: #e0e0e0;
+	background: #fafafa;
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
