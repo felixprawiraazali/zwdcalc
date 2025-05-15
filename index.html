@@ -392,8 +392,6 @@
 			center.className = 'p13';
 
 			const leftDiv = document.createElement('div');
-			leftDiv.style.width = '40%';
-			leftDiv.style.textAlign = 'left';
 			leftDiv.className = 'left'
 			leftDiv.innerHTML = `
 				${params.name} <br>
@@ -402,8 +400,6 @@
 			`;
 
 			const rightDiv = document.createElement('div');
-			rightDiv.style.width = '40%';
-			rightDiv.style.textAlign = 'right';
 			rightDiv.className = 'right'
 			rightDiv.innerHTML = ``;
 
@@ -645,13 +641,13 @@
 							if (first_draw == -1) {
  								first_draw = i
 							}
-							drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '10%', 'shortLineLayer')
+							drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '5%', 'shortLineLayer')
 							window.addEventListener('resize', () => {
 								if (i == first_draw) {
 									const svg = document.getElementById("shortLineLayer");									
 									svg.querySelectorAll("line").forEach(line => line.remove());
 								}
-								drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '10%', 'shortLineLayer')
+								drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '5%', 'shortLineLayer')
 							})
 						}
 					}

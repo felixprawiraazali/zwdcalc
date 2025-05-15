@@ -47,13 +47,23 @@ body {
 	border: 1px solid #555;
 	background: #fafafa;
 	transition: background .2s;     
+	padding: var(--item-padding);
 }
 .zwds-grid > div {
 	overflow: hidden;
-	padding: var(--item-padding);
 }
 .zwds-grid > .p13 {
 	font-size: min(calc(0.8rem + 0.5vw), 16px);
+	grid-area: p13;
+	background: #e0e0e0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	border: 1px solid #555;
+	overflow: hidden;
+	text-align: center;
+	flex-direction: row;
+	padding: 30px;
 }
 .zwds-grid > div:not(.p13):hover { background: #e8e8e8; }
 /* Wide layout */
@@ -124,16 +134,7 @@ body {
 .sectionB1, .sectionB2, .sectionB3 { border-right: 1px solid #ccc; }
 .sectionB3 { border-right: none; }
 .p13 {
-	grid-area: p13;
-	background: #e0e0e0;
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-between;
-	font-size: calc(0.9rem + 0.5vw);
-	border: 1px solid #555;
-	overflow: hidden;
-	text-align: center;
-	flex-direction: row;
+
 }
 .selected {
 	background-color: #dddddd !important;
@@ -156,6 +157,14 @@ body {
 }
 .minor {
 	color: lightcoral;
+}
+.left {
+	width: 40%;
+  text-align: left;
+}
+.right {
+	width: 40%;
+  text-align: right;
 }
 @media (min-width: 601px) {
 	.sectionA1 {
@@ -200,12 +209,26 @@ body {
 		order: 1;
 	}
 	.sectionA1, .sectionA2,
-	.sectionB1, .sectionB2-1, .sectionB2-2, .sectionB3-1, .sectionB3-2,
-	.p13 {
+	.sectionB1, .sectionB2-1, .sectionB2-2, .sectionB3-1, .sectionB3-2 {
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		flex-direction: column;
 		justify-content: space-around;
+	}
+	.zwds-grid > .p13 {
+		padding: 20px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+	.left {
+		border-bottom: 1px solid #c7c7c7;
+	}
+	.left, .right {
+		width: 100%;
+		text-align: center;
 	}
 }
