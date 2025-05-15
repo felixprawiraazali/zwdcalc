@@ -84,8 +84,22 @@
 				</div>
 			  </div>
 			</template>
-			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
-			<svg id="shortLineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
+			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none">
+				<defs>
+			    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+			      <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+			    </marker>
+			  </defs>
+			</svg>
+			<svg id="shortLineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none">
+				<defs>
+			    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
+            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+			      <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
+			    </marker>
+			  </defs>
+			</svg>
 	  </div>	
   </div>
 
@@ -93,6 +107,7 @@
 	<script src="./js/stars_mapping.js"></script>
 	<script src="./js/transformation.js"></script>
 	<script>
+		let lastClickPalace = -1
 		const refYearSelect = document.getElementById('refYear');
 	  let currentYear = new Date().getFullYear();
 	  let urlParams = new URLSearchParams(window.location.search);
@@ -476,7 +491,16 @@
 
 		function setTransformationArrow(i) {
 		  const svg = document.getElementById("lineLayer");
-  		if (svg) svg.innerHTML = '';
+  		if (svg) {
+  			svg.querySelectorAll("line").forEach(line => line.remove());
+  		}
+
+  		if (lastClickPalace == i) {
+  			lastClickPalace = -1
+  			return null
+  		}
+
+			lastClickPalace = i
 
 			let id = `p${i}`
 			let heavenlyStem = document.getElementById(id).dataset.heavenlyStem
@@ -501,7 +525,7 @@
 					drawMultipleLines(id, [target], color)
 					window.addEventListener('resize', () => {
 						if (index == 0) {
-							svg.innerHTML = '';
+							svg.querySelectorAll("line").forEach(line => line.remove());
 						}
 					  drawMultipleLines(id, [target], color)
 					});
@@ -596,6 +620,7 @@
 		    if (dash) {
 		      line.setAttribute("stroke-dasharray", "5,3");
 		    }
+		    line.setAttribute("marker-end", "url(#arrow)");
 		    svg.appendChild(line);
 		  });
 		}
@@ -623,8 +648,8 @@
 							drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '10%', 'shortLineLayer')
 							window.addEventListener('resize', () => {
 								if (i == first_draw) {
-									const svg = document.getElementById("shortLineLayer");
-									svg.innerHTML = ''
+									const svg = document.getElementById("shortLineLayer");									
+									svg.querySelectorAll("line").forEach(line => line.remove());
 								}
 								drawMultipleLines(id, [target_id], color, false, 'center', oppositeDirection[i], '10%', 'shortLineLayer')
 							})
