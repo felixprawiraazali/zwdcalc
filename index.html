@@ -215,9 +215,9 @@
 		let indexMap = [3,4,5,6,2,7,1,8,0,11,10,9]
 		let astrolabe = null
 
-		const lineRedrawQueue = [];
+		const lineRedrawQueue = new Set();
 		function registerResizeRedraw(fn) {
-		  lineRedrawQueue.push(fn);
+		  lineRedrawQueue.add(fn);
 		}
 
 		function redrawAllLines() {
@@ -227,7 +227,7 @@
 		}
 
 		function clearLineRedrawQueue() {
-		  lineRedrawQueue.length = 0
+		  lineRedrawQueue.clear()
 		}
 
   	function generateChart(params) {
@@ -509,7 +509,9 @@
 						let opposite = palaceOpposites[parseInt(target_id)].opposite
 						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
 						registerResizeRedraw(() => {
-							drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+							if (lastClickPalace === i) {
+								drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+							}
 						})
 					}
 					
@@ -518,7 +520,9 @@
 						if (index == 0) {
 							svg.querySelectorAll("line").forEach(line => line.remove());
 						}
-					  drawMultipleLines(id, [target], color)
+						if (lastClickPalace === i) {
+					  	drawMultipleLines(id, [target], color)
+					  }
 					});
 				}
 			})
