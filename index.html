@@ -235,22 +235,10 @@
 			  key => palaceSequence[key] === "Self"
 			));
 
-			const parentsIndex = parseInt(Object.keys(palaceSequence).find(
-			  key => palaceSequence[key] === "Parents"
-			));
-
-			let direction = selfIndex < parentsIndex ? 'clockwise' : 'counter-clockwise';
-			if (selfIndex == 11 && parentsIndex == 0) {
-				direction = 'clockwise'
-			} else if (selfIndex == 0 && parentsIndex == 11) {
-				direction = 'counter-clockwise'
-			}
-
 			let diff = selfIndex - clickedIndex
 
 		  for (let i = 0; i < indices.length; i++) {
-		  	let j
-  			j = (i + diff + 12) % 12
+  			let j = (i + diff + 12) % 12
 
 		    rotated[i] = palaceSequence[j]
 		  }
