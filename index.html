@@ -668,6 +668,13 @@
 			let first_draw = -1
 			const overlapMap = new Map();
 
+			const colorPriority = {
+			  red: 1,
+			  blue: 2,
+			  green: 3,
+			  orange: 4
+			};
+
 			for (let i = 0; i < 12; i++) {
 				let id = `p${i}`
 				let opposite = palaceOpposites[i].opposite
@@ -678,6 +685,8 @@
 					return null
 				}
 
+				let drawQueue = []
+
 				stemData.mutagen.forEach((target, index) => {
 					if (index !== -1) {
 						let color = labels[index].color
@@ -687,20 +696,30 @@
 								first_draw = i
 							}
 
-							const key = `${id}->p${target_id}`;
-							const offsetIndex = overlapMap.get(key) || 0;
-							overlapMap.set(key, offsetIndex + 1);							
-
-							drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', labels[index].code, 'shortLineLayer', offsetIndex)
-							registerResizeRedraw(() => {
-								if (i == first_draw) {
-									const svg = document.getElementById("shortLineLayer");									
-									svg.querySelectorAll("line").forEach(line => line.remove());
-								}
-								drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', labels[index].code, 'shortLineLayer', offsetIndex)
+							drawQueue.push({
+								id,
+								target_id,
+								color,
+								index
 							})
 						}
 					}
+				})
+				drawQueue.sort((a, b) => {
+				  const prioA = colorPriority[a.color] ?? Infinity;
+				  const prioB = colorPriority[b.color] ?? Infinity;
+				  return prioA - prioB;
+				});
+
+				drawQueue.forEach((data, index) => {
+					drawMultipleLines(data.id, [`p${data.target_id}`], data.color, false, 'center', palaceOpposites[i].direction, '5%', labels[data.index].code, 'shortLineLayer', index)
+					registerResizeRedraw(() => {
+						if (i == first_draw) {
+							const svg = document.getElementById("shortLineLayer");
+							svg.querySelectorAll("line").forEach(line => line.remove());
+						}
+						drawMultipleLines(data.id, [`p${data.target_id}`], data.color, false, 'center', palaceOpposites[i].direction, '5%', labels[data.index].code, 'shortLineLayer', index)
+					})
 				})
 			}
 		}
