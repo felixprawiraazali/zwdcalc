@@ -84,14 +84,7 @@
 				</div>
 			  </div>
 			</template>
-			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none">
-				<defs>
-			    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5"
-            markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-			      <path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" />
-			    </marker>
-			  </defs>
-			</svg>
+			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
 			<svg id="shortLineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none">
 				<defs>
 			    <marker id="arrowShort" viewBox="0 0 10 10" refX="10" refY="5"
@@ -223,6 +216,8 @@
 		function redrawAllLines() {
 		  document.getElementById("lineLayer")?.querySelectorAll("line").forEach(line => line.remove());
 		  document.getElementById("shortLineLayer")?.querySelectorAll("line").forEach(line => line.remove());
+	    document.querySelectorAll("text.arrow-label").forEach(label => label.remove());
+
 		  lineRedrawQueue.forEach(fn => fn());
 		}
 
@@ -528,7 +523,7 @@
 			})
 		}
 
-		function drawMultipleLines(fromId, toIds, color, dash = false, targetSide = 'right', fromSide = 'center', maxLength = null, template = 'lineLayer') {
+		function drawMultipleLines(fromId, toIds, color, dash = false, targetSide = 'right', fromSide = 'center', maxLength = null, labelText = null, template = 'lineLayer') {
 		  const container = document.querySelector('.zwds-grid');
 		  const svg = document.getElementById(template);
 		  const containerRect = container.getBoundingClientRect();
@@ -611,13 +606,68 @@
 		    line.setAttribute("x2", x2);
 		    line.setAttribute("y2", y2);
 		    line.setAttribute("stroke", color);
-		    line.setAttribute("stroke-width", "1");
+		    line.setAttribute("stroke-width", "1.5");
 		    if (dash) {
 		      line.setAttribute("stroke-dasharray", "5,3");
 		    }
-		    let arrow = template == 'lineLayer' ? 'arrow' : 'arrowShort'
-		    line.setAttribute("marker-end", `url(#${arrow})`);
+		    if (template == 'shortLineLayer') {
+		    	line.setAttribute("marker-end", `url(#arrowShort)`);
+		    }
 		    svg.appendChild(line);
+
+		    if (labelText) {
+				  const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
+  				let xOffset, yOffset;
+
+				  switch (fromSide) {
+				    case 'left':
+				      xOffset = 0
+				      yOffset = dy < 0 ? 22 : 18
+				      break;
+				    case 'right':
+				      xOffset = -10
+				      yOffset = dy < 0 ? 22 : 18
+				      break;
+				    case 'top':
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = 15
+				      break;
+				    case 'bottom':				    	
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = -5
+				      break;
+				    case 'top-left':
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = dy < 0 ? 15 : -6
+				      break;
+				    case 'top-right':
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = dy < 0 ? 15 : -6
+				      break;
+				    case 'bottom-left':
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = dy < 0 ? 15 : -6
+				      break;
+				    case 'bottom-right':
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = dy < 0 ? 15 : -6
+				      break;
+				    case 'center':
+				    default:
+				      xOffset = dx < 0 ? -15 : 5
+				      yOffset = dy < 0 ? 15 : -6
+				      break;
+				  }
+				  text.setAttribute("x", x2 + xOffset);
+  				text.setAttribute("y", y2 + yOffset);
+				  text.setAttribute("fill", color);
+				  text.setAttribute("font-size", "13");
+				  text.setAttribute("font-family", "sans-serif");
+				  text.setAttribute("class", "arrow-label");
+				  text.textContent = labelText;
+				  svg.appendChild(text);
+				}
 		  });
 		}
 
@@ -642,13 +692,13 @@
  								first_draw = i
 							}
 
-							drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', 'shortLineLayer')
+							drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', labels[index].code, 'shortLineLayer')
 							registerResizeRedraw(() => {
 								if (i == first_draw) {
 									const svg = document.getElementById("shortLineLayer");									
 									svg.querySelectorAll("line").forEach(line => line.remove());
 								}
-								drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', 'shortLineLayer')
+								drawMultipleLines(id, [`p${target_id}`], color, false, 'center', palaceOpposites[i].direction, '5%', labels[index].code, 'shortLineLayer')
 							})
 						}
 					}
