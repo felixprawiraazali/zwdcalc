@@ -26,7 +26,7 @@ body {
 	width: min(90vw, 93vh);
 	max-width: 100vw;
 	aspect-ratio: 1;
-	min-height: 800px;
+	min-height: 900px;
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 	grid-template-rows:    repeat(4, 1fr);
@@ -53,7 +53,7 @@ body {
 	overflow: hidden;
 }
 .zwds-grid > .p13 {
-	font-size: min(calc(0.8rem + 0.5vw), 16px);
+	font-size: min(calc(0.6rem + 0.5vw), 16px);
 	grid-area: p13;
 	background: #fafafa;
 	display: flex;
@@ -71,7 +71,7 @@ body {
 .sectionA1, .sectionA2 {
 	flex: 1;
 	display: flex;
-	font-size: min(calc(0.8rem + 0.5vw), 16px);
+	font-size: min(calc(0.6rem + 0.5vw), 16px);
 	text-align: left;
 	flex-direction: column;
 }
@@ -89,7 +89,7 @@ body {
 	display: flex; 
 	justify-content: center;
 	font-weight: 600;
-	font-size: min(calc(0.8rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 14px);
 }
 .sectionB { flex: 1; display: flex; }
 .sectionB1 {
@@ -97,12 +97,12 @@ body {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	font-size: min(calc(0.65rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 14px);
 	text-align: center;
 	flex: 0 0 20%;
 }
 .sectionB1-1, .sectionB1-2 {
-	font-size: min(calc(0.65rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 14px);
 	
 	text-align: center;
 }    
@@ -117,7 +117,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	border-bottom: 1px solid #ccc;
-	font-size: min(calc(0.65rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 14px);
 	
 	text-align: center;
 }
@@ -133,7 +133,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	border-bottom: 1px solid #ccc;
-	font-size: min(calc(0.65rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 14px);
 	
 	text-align: center;
 }
@@ -157,7 +157,7 @@ body {
     left: 801px;
     top: 699px;
     display: none;
-    font-size: min(calc(0.65rem + 0.5vw), 14px);
+    font-size: min(calc(0.55rem + 0.5vw), 14px);
 }
 .major {
 	color: darkblue;
@@ -217,7 +217,7 @@ body {
 	}
 	.sectionA1, .sectionA2,
 	.sectionB1, .sectionB2-1, .sectionB2-2, .sectionB3-1, .sectionB3-2 {
-		white-space: nowrap;
+/*		white-space: nowrap;*/
 		overflow: hidden;
 		text-overflow: ellipsis;
 		flex-direction: column;
