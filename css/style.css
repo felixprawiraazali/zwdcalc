@@ -71,7 +71,7 @@ body {
 .sectionA1, .sectionA2 {
 	flex: 1;
 	display: flex;
-	font-size: min(calc(0.8rem + 0.5vw), 16px);     
+	font-size: min(calc(0.8rem + 0.5vw), 16px);
 	text-align: left;
 	flex-direction: column;
 }
@@ -83,6 +83,13 @@ body {
 	border-right: none; 
 	align-items: flex-end;
 	justify-content: flex-start;
+}
+.sectionC { 
+	flex: 0.5; 
+	display: flex; 
+	justify-content: center;
+	font-weight: 600;
+	font-size: min(calc(0.8rem + 0.5vw), 14px);
 }
 .sectionB { flex: 1; display: flex; }
 .sectionB1 {

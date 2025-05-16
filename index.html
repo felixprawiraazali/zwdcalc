@@ -69,6 +69,7 @@
 				<div class="sectionA1"></div>
 				<div class="sectionA2"></div>
 				</div>
+				<div class="sectionC"></div>
 				<div class="sectionB">
 				<div class="sectionB1">
 					<div class="sectionB1-1"></div>
@@ -100,6 +101,7 @@
 	<script src="./js/stars_mapping.js"></script>
 	<script src="./js/transformation.js"></script>
 	<script>
+		let palaceSequence = {}
 		let lastClickPalace = -1
 		const refYearSelect = document.getElementById('refYear');
 		let currentYear = new Date().getFullYear();
@@ -225,6 +227,36 @@
 			lineRedrawQueue.clear()
 		}
 
+		function getRotatedPalaceNames(clickedIndex) {			
+		  const rotated = {};
+		  const indices = Object.keys(palaceSequence).map(Number);
+
+		  const selfIndex = parseInt(Object.keys(palaceSequence).find(
+			  key => palaceSequence[key] === "Self"
+			));
+
+			const parentsIndex = parseInt(Object.keys(palaceSequence).find(
+			  key => palaceSequence[key] === "Parents"
+			));
+
+			let direction = selfIndex < parentsIndex ? 'clockwise' : 'counter-clockwise';
+			if (selfIndex == 11 && parentsIndex == 0) {
+				direction = 'clockwise'
+			} else if (selfIndex == 0 && parentsIndex == 11) {
+				direction = 'counter-clockwise'
+			}
+
+			let diff = selfIndex - clickedIndex
+
+		  for (let i = 0; i < indices.length; i++) {
+		  	let j
+  			j = (i + diff + 12) % 12
+
+		    rotated[i] = palaceSequence[j]
+		  }
+		  return rotated;
+		}
+
 		function generateChart(params) {
 			clearLineRedrawQueue()
 			cn_year = getChineseYearPinyin(params.refYear)
@@ -317,6 +349,7 @@
 				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = '';
 				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(astroData.name)
+				palaceSequence[indexMap[i]] = capitalizeFirstLetter(astroData.name)
 				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
 
 				cell.addEventListener('click', function() {
@@ -430,23 +463,28 @@
 				p = defaultIndex
 			}
 			let indexSelectedPalace = indexMap[p]
-			
 			let selectedPalace = astrolabe.palaces[indexSelectedPalace]			
 			let [min, max] = selectedPalace.decadal.range
+
+			let rotated = getRotatedPalaceNames(indexMap[p])
+
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 				let el = document.querySelector(`.zwds-grid .p${i}`);
 				el.classList.remove('selected')
+				el.querySelector('.sectionC').innerHTML = ''
 				if (i == p) {
 					el.classList.add('selected')
-					// console.log(JSON.stringify(astroData, true, 2))
 				}
+
+				el.querySelector('.sectionC').innerHTML = `Decade-${rotated[indexMap[i]]}`
+
 				let age = getAgesInRange(astroData.ages, min, max)
 				el.querySelector('.sectionB2-1').textContent = age
 				if (parseInt(age) > 0) {
 					el.querySelector('.sectionB2-2').textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
 				}
-			}
+			}		
 
 			let el = document.querySelector(`.zwds-grid .p13 .right`);
 			el.innerHTML = `
