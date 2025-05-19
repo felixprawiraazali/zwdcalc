@@ -90,6 +90,7 @@ body {
 	flex-direction: column;
 	align-items: anchor-center;
 	justify-content: center;
+	text-align: center;
 	font-weight: 600;
 	font-size: min(calc(0.55rem + 0.5vw), 14px);
 }
