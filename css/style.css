@@ -87,9 +87,14 @@ body {
 .sectionC { 
 	flex: 0.5; 
 	display: flex; 
+	flex-direction: column;
+	align-items: anchor-center;
 	justify-content: center;
 	font-weight: 600;
 	font-size: min(calc(0.55rem + 0.5vw), 14px);
+}
+.sectionC1 {
+	color: #a58155;
 }
 .sectionB { flex: 1; display: flex; }
 .sectionB1 {

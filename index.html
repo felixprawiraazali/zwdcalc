@@ -66,23 +66,26 @@
 		<div class="zwds-grid">
 			<template id="palace-template">
 				<div class="sectionA">
-				<div class="sectionA1"></div>
-				<div class="sectionA2"></div>
+					<div class="sectionA1"></div>
+					<div class="sectionA2"></div>
 				</div>
-				<div class="sectionC"></div>
+				<div class="sectionC">
+					<div class="sectionC1"></div>
+					<div class="sectionC2"></div>
+				</div>
 				<div class="sectionB">
-				<div class="sectionB1">
-					<div class="sectionB1-1"></div>
-					<div class="sectionB1-2"></div>
-				</div>
-				<div class="sectionB2">
-					<div class="sectionB2-1"></div>
-					<div class="sectionB2-2"></div>
-				</div>
-				<div class="sectionB3">
-					<div class="sectionB3-1"></div>
-					<div class="sectionB3-2"></div>
-				</div>
+					<div class="sectionB1">
+						<div class="sectionB1-1"></div>
+						<div class="sectionB1-2"></div>
+					</div>
+					<div class="sectionB2">
+						<div class="sectionB2-1"></div>
+						<div class="sectionB2-2"></div>
+					</div>
+					<div class="sectionB3">
+						<div class="sectionB3-1"></div>
+						<div class="sectionB3-2"></div>
+					</div>
 				</div>
 			</template>
 			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
@@ -267,22 +270,14 @@
 			container.querySelectorAll("div:not(#lineLayer):not(#shortLineLayer)").forEach(el => el.remove());
 			const tpl = document.getElementById('palace-template').content;
 
-			const contextMenu = document.createElement('div');
-			contextMenu.id = 'custom-menu';
-			contextMenu.innerHTML = '<div id="transform-option">Transform Decade</div>';
-			document.body.appendChild(contextMenu);
-
-			// Hide menu when clicking outside
-			document.addEventListener('click', () => {
-				contextMenu.style.display = 'none';
-			});
-
 			for (let i = 0; i <= 11; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
+				let palaceName = capitalizeFirstLetter(astroData.name)
 				const cell = document.createElement('div');
 				cell.className = 'p' + i;
 				cell.id = 'p' + i;
-				cell.dataset.palace = i;
+				cell.dataset.index = i;
+				cell.dataset.palace = palaceName
 				cell.dataset.heavenlyStem = astroData.decadal.heavenlyStem
 				const clone = tpl.cloneNode(true);
 				let [min, max] = astroData.decadal.range;
@@ -336,21 +331,19 @@
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
 				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = '';
-				clone.querySelector('.sectionB3-1').textContent = capitalizeFirstLetter(astroData.name)
-				palaceSequence[indexMap[i]] = capitalizeFirstLetter(astroData.name)
-				clone.querySelector('.sectionB3-2').textContent = astroData.decadal.range.join('-')
-
-				cell.addEventListener('click', function() {
-						setTransformationArrow(i)
+				clone.querySelector('.sectionB3-1').textContent = palaceName
+				palaceSequence[indexMap[i]] = palaceName
+				const sectionB32 = clone.querySelector('.sectionB3-2')
+				sectionB32.textContent = astroData.decadal.range.join('-')
+				sectionB32.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
+				sectionB32.addEventListener('click', () => {
+					setPalaceAge(i)
 				})
 
-				cell.addEventListener('contextmenu', function (event) {
-					event.preventDefault();
-					contextMenu.style.display = 'block';
-					contextMenu.style.left = event.pageX + 'px';
-					contextMenu.style.top = event.pageY + 'px';
-					contextMenu.dataset.palaceIndex = i; // Store the index for use on click
-				});
+				cell.addEventListener('click', function() {
+					setTransformationArrow(i)
+				})
+
 				cell.appendChild(clone);
 				container.appendChild(cell);
 			}
@@ -392,12 +385,6 @@
 					}
 				}
 			}
-
-			document.getElementById('transform-option').addEventListener('click', function () {
-				const palaceIndex = contextMenu.dataset.palaceIndex;				
-				setPalaceAge(palaceIndex)
-				contextMenu.style.display = 'none';
-			});
 			
 			const center = document.createElement('div');
 			center.className = 'p13';
@@ -447,6 +434,7 @@
 		}
 
 		function setPalaceAge(p = null) {
+			let rotated = p ? getRotatedPalaceNames(indexMap[p]) : {}
 			if (p == null) {
 				p = defaultIndex
 			}
@@ -454,23 +442,29 @@
 			let selectedPalace = astrolabe.palaces[indexSelectedPalace]			
 			let [min, max] = selectedPalace.decadal.range
 
-			let rotated = getRotatedPalaceNames(indexMap[p])
-
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 				let el = document.querySelector(`.zwds-grid .p${i}`);
 				el.classList.remove('selected')
-				el.querySelector('.sectionC').innerHTML = ''
+				el.querySelector('.sectionC2').innerHTML = ''
 				if (i == p) {
 					el.classList.add('selected')
 				}
 
-				el.querySelector('.sectionC').innerHTML = `Decade-${rotated[indexMap[i]]}`
+				if (Object.keys(rotated).length !== 0) {
+					el.querySelector('.sectionC2').innerHTML = `D.${rotated[indexMap[i]]}`
+				}
 
 				let age = getAgesInRange(astroData.ages, min, max)
 				el.querySelector('.sectionB2-1').textContent = age
+				let sectionB22 = el.querySelector('.sectionB2-2')
 				if (parseInt(age) > 0) {
-					el.querySelector('.sectionB2-2').textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
+					sectionB22.textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
+					sectionB22.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
+					sectionB22.addEventListener('click', showASelf)
+				} else {
+					sectionB22.textContent = ''
+					sectionB22.removeEventListener('click', showASelf)
 				}
 			}		
 
@@ -479,6 +473,50 @@
 				Decade ${min} - ${max}
 			`
 		}
+
+		function showASelf(event) {
+			let cornerPalace = document.getElementById("p8").dataset.palace
+			let i = event.target.closest('[id^="p"]').dataset.index
+			let rotated = i ? getRotatedPalaceNames(indexMap[i]) : {}
+			let monthData = markClockwiseMLabels(rotated, cornerPalace)
+
+			for (let i = 0; i < 12; i++) {
+				let el = document.querySelector(`.zwds-grid .p${i}`);
+				let sectionC1 = el.querySelector('.sectionC1')
+				sectionC1.innerHTML = ''
+				if (Object.keys(rotated).length !== 0) {
+					sectionC1.innerHTML = `A.${rotated[indexMap[i]]} (${monthData[indexMap[i]]})`
+				}
+			}
+		}
+
+		function markClockwiseMLabels(data, cornerName) {
+		  const clockwiseOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+		  const cornerIndex = parseInt(
+		    Object.entries(data).find(([_, name]) => name === cornerName)?.[0]
+		  );
+
+		  if (isNaN(cornerIndex)) {
+		    throw new Error(`Corner name "${cornerName}" not found.`);
+		  }
+
+		  const rotated = [];
+		  const start = clockwiseOrder.indexOf(cornerIndex);
+
+		  // Rotate clockwiseOrder starting from cornerIndex
+		  for (let i = 0; i < 12; i++) {
+		    rotated.push(clockwiseOrder[(start + i) % 12]);
+		  }
+
+		  const result = {};
+		  rotated.forEach((idx, i) => {
+		    result[idx] = 'M' + (i + 1);
+		  });
+
+		  return result;
+		}
+
 
 		function getTransformationType(stemKey, starName) {
 			const entry = transforms[stemKey+"Heavenly"];
@@ -526,7 +564,7 @@
 					let color = labels[index].color
 					
 					if (index == 3) {						
-						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.palace						
+						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.index						
 						let opposite = palaceOpposites[parseInt(target_id)].opposite
 						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
 						registerResizeRedraw(() => {
@@ -716,7 +754,7 @@
 				stemData.mutagen.forEach((target, index) => {
 					if (index !== -1) {
 						let color = labels[index].color
-						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.palace
+						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.index
 						if (target_id == opposite) {
 							if (first_draw == -1) {
 								first_draw = i
