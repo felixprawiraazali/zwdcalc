@@ -486,7 +486,7 @@
 
 		function showASelf(event) {
 			let cornerPalace = document.getElementById("p8").dataset.palace
-			let i = event.target.closest('[id^="p"]').dataset.index
+			let i = event.target.closest('div[id^="p"]').dataset.index
 			let rotated = i ? getRotatedPalaceNames(indexMap[i]) : {}
 			let monthData = markClockwiseMLabels(rotated, cornerPalace)
 
@@ -574,7 +574,7 @@
 					let color = labels[index].color
 					
 					if (index == 3) {						
-						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.index						
+						let target_id = document.getElementById(target).closest('div[id^="p"]').dataset.index						
 						let opposite = palaceOpposites[parseInt(target_id)].opposite
 						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
 						registerResizeRedraw(() => {
@@ -760,11 +760,11 @@
 				}
 
 				let drawQueue = []
-
 				stemData.mutagen.forEach((target, index) => {
 					if (index !== -1) {
 						let color = labels[index].color
-						let target_id = document.getElementById(target).closest('[id^="p"]').dataset.index
+						let target_id = document.getElementById(target).closest('div[id^="p"]').dataset.index
+						
 						if (target_id == opposite) {
 							if (first_draw == -1) {
 								first_draw = i
@@ -779,6 +779,7 @@
 						}
 					}
 				})
+				
 				drawQueue.sort((a, b) => {
 				  const prioA = colorPriority[a.color] ?? Infinity;
 				  const prioB = colorPriority[b.color] ?? Infinity;
