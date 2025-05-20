@@ -8,8 +8,8 @@ const FILES_TO_CACHE = [
   './js/transformation.js',
   './js/tailwind.js',
   './manifest.json',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './img/192.png',
+  './img/512.png'
 ];
 
 self.addEventListener('install', event => {
