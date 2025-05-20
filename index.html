@@ -59,6 +59,13 @@
 				</div>       
 			</div>
 
+			<div class="mt-4">
+			  <label class="inline-flex items-center">
+			    <input type="checkbox" id="twins" class="form-checkbox h-5 w-5 text-blue-600">
+			    <span class="ml-2 text-sm">Twins</span>
+			  </label>
+			</div>
+
 			<button type="submit"
 					class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
 				Plot Chart
@@ -125,7 +132,11 @@
 		}
   </script>
 	<script>
+		let range = {}
 		let palaceSequence = {}
+		let twinSequence = {}
+		let decadalRange = {}
+		let twinDecadalRange = {}
 		let lastClickPalace = -1
 		const refYearSelect = document.getElementById('refYear');
 		let currentYear = new Date().getFullYear();
@@ -304,7 +315,7 @@
 				let [min, max] = astroData.decadal.range;
 
 				if (isWithinRange(currentAge, min, max)) {
-					defaultIndex = i					
+					defaultIndex = i
 				}
 				if (astroData.earthlyBranch == startingPoint) {
 					startFrom = i
@@ -353,7 +364,14 @@
 				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = '';
 				clone.querySelector('.sectionB3-1').textContent = palaceName
+				
+				let twinIndex = indexMap[i] - 1 < 0 ? 11 : indexMap[i] - 1
+				
 				palaceSequence[indexMap[i]] = palaceName
+				decadalRange[indexMap[i]] = astroData.decadal.range
+				twinSequence[twinIndex] = palaceName
+				twinDecadalRange[twinIndex] = astroData.decadal.range
+
 				const sectionB32 = clone.querySelector('.sectionB3-2')
 				sectionB32.textContent = astroData.decadal.range.join('-')
 				sectionB32.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
@@ -369,6 +387,8 @@
 				cell.appendChild(clone);
 				container.appendChild(cell);
 			}
+
+			range = decadalRange
 			
 			for (let i = 0; i <= 11; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
@@ -464,8 +484,8 @@
 				p = defaultIndex
 			}
 			let indexSelectedPalace = indexMap[p]
-			let selectedPalace = astrolabe.palaces[indexSelectedPalace]			
-			let [min, max] = selectedPalace.decadal.range
+			let selectedPalace = astrolabe.palaces[indexSelectedPalace]
+			let [min, max] = range[indexSelectedPalace]
 
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
@@ -547,7 +567,6 @@
 
 		  return result;
 		}
-
 
 		function getTransformationType(stemKey, starName) {
 			const entry = transforms[stemKey+"Heavenly"];
@@ -813,6 +832,20 @@
 			}
 		}
 
+		function toggleTwins(enabled) {
+			let sequence = enabled ? twinSequence : palaceSequence
+			range = enabled ? twinDecadalRange : decadalRange
+			for (let i = 0; i <= 11; i++) {
+				let el = document.querySelector(`.zwds-grid .p${i}`);
+				let sectionB31 = el.querySelector('.sectionB3-1')
+				sectionB31.textContent = sequence[indexMap[i]]
+
+				const sectionB32 = el.querySelector('.sectionB3-2')
+				sectionB32.textContent = range[indexMap[i]].join('-')
+			}
+			setPalaceAge()
+		}
+
 		document.addEventListener('DOMContentLoaded', () => {
 			const params = parseQuery();
 			fillForm(params);
@@ -837,6 +870,11 @@
 					requestAnimationFrame(redrawAllLines);
 				}, 50);
 			});
+
+	    const toggleCheckbox = document.getElementById('twins');
+			toggleCheckbox.addEventListener('change', (e) => {
+	      toggleTwins(e.target.checked);
+	    });
 		});
 	</script>
 </body>
