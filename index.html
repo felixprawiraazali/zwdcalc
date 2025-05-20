@@ -174,8 +174,8 @@
 			} else {
 				h = Number(t);
 			}
-			if (h === 0)   return 12;                 // 00:00–00:59 → late Rat
-			if (h === 23)  return 0;                  // 23:00–23:59 → early Rat
+			if (h === 0)   return 0;                 // 00:00–00:59 → late Rat
+			if (h === 23)  return 12;                  // 23:00–23:59 → early Rat
 			// 01–22 → floor((h+1)/2) gives 1…11
 			
 			return Math.floor((h + 1) / 2);
