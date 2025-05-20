@@ -4,8 +4,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>ZWDS 13-Palace Responsive Sections without A3</title>
-	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="./js/tailwind.js"></script>
 	<link rel="stylesheet" type="text/css" href="./css/style.css">
+	<link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a202c" />
 </head>
 <body class="bg-gray-100 text-gray-600">
 	<div class="max-w-4xl mx-auto p-6 space-y-8">
@@ -103,6 +105,14 @@
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
 	<script src="./js/transformation.js"></script>
+	<script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('✅ Service worker registered'))
+        .catch(err => console.error('❌ Service worker failed:', err));
+    }
+  </script>
+  
 	<script>
 		let palaceSequence = {}
 		let lastClickPalace = -1
