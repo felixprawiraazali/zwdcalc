@@ -20,9 +20,20 @@ self.addEventListener('install', event => {
   );
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
+  // Only handle navigation requests (e.g., for HTML)
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('./index.html').then((cachedPage) => {
+        return cachedPage || fetch('./index.html');
+      })
+    );
+    return;
+  }
+
+  // For other assets, try cache first, then network
   event.respondWith(
-    caches.match(event.request).then(response => {
+    caches.match(event.request).then((response) => {
       return response || fetch(event.request);
     })
   );
