@@ -174,8 +174,8 @@
 			} else {
 				h = Number(t);
 			}
-			if (h === 0)   return 0;                 // 00:00–00:59 → early Rat
-			if (h === 23)  return 12;                  // 23:00–23:59 → late Rat
+			if (h === 0)   return 12;                 // 00:00–00:59 → late Rat
+			if (h === 23)  return 0;                  // 23:00–23:59 → early Rat
 			// 01–22 → floor((h+1)/2) gives 1…11
 			
 			return Math.floor((h + 1) / 2);
@@ -336,7 +336,8 @@
 				const sectionB32 = clone.querySelector('.sectionB3-2')
 				sectionB32.textContent = astroData.decadal.range.join('-')
 				sectionB32.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
-				sectionB32.addEventListener('click', () => {
+				sectionB32.addEventListener('click', (e) => {
+					e.stopPropagation();
 					setPalaceAge(i)
 				})
 
@@ -434,7 +435,7 @@
 		}
 
 		function setPalaceAge(p = null) {
-			let rotated = p ? getRotatedPalaceNames(indexMap[p]) : {}
+			let rotated = p !== null ? getRotatedPalaceNames(indexMap[p]) : {}
 			if (p == null) {
 				p = defaultIndex
 			}
@@ -452,6 +453,7 @@
 				}
 
 				if (Object.keys(rotated).length !== 0) {
+					el.querySelector('.sectionC1').innerHTML = ''
 					el.querySelector('.sectionC2').innerHTML = `D.${rotated[indexMap[i]]}`
 				}
 
@@ -461,10 +463,10 @@
 				if (parseInt(age) > 0) {
 					sectionB22.textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
 					sectionB22.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
-					sectionB22.addEventListener('click', showASelf)
+					sectionB22.addEventListener('click', wrappedShowASelf)
 				} else {
 					sectionB22.textContent = ''
-					sectionB22.removeEventListener('click', showASelf)
+					sectionB22.removeEventListener('click', wrappedShowASelf)
 				}
 			}		
 
@@ -472,6 +474,11 @@
 			el.innerHTML = `
 				Decade ${min} - ${max}
 			`
+		}
+
+		function wrappedShowASelf(e) {
+			e.stopPropagation();
+			showASelf(e);
 		}
 
 		function showASelf(event) {
