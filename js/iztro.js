@@ -16820,7 +16820,9 @@
                 o = a.lunarDay,
                 u = a.isLeap,
                 g = i.EARTHLY_BRANCHES.indexOf("yinEarthly");
-              return h(r + 1 - g + (u && t && o > 15 && 12 !== n ? 1 : 0));
+              
+              // return h(r + 1 - g + (u && t && o > 15 && 12 !== n ? 1 : 0));
+                return h(r + 1 - g );
             },
             f = function (e, n) {
               return n >= 12 ? e : e - 1;
