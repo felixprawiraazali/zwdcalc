@@ -256,7 +256,7 @@
 			
 			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 1)
-			// console.log(data)			
+			console.log(data)
 
 			let currentAge = parseInt(params.refYear) - parseInt(params.year) + 1
 
@@ -395,7 +395,10 @@
 			leftDiv.innerHTML = `
 				${params.name} <br>
 				${astrolabe.solarDate} (${currentAge}) <br>
-				${params.hour}:${params.minute} ${astrolabe.time}
+				${params.hour}:${params.minute} ${astrolabe.time} <br>
+				Lunar Year: ${astrolabe.rawDates.lunarDate.lunarYear} Month: ${astrolabe.rawDates.lunarDate.lunarMonth} Day: ${astrolabe.rawDates.lunarDate.lunarDay} 
+				${astrolabe.rawDates.lunarDate.isLeap ? 'Leap Month' : ''} <br>
+				Element is : ${astrolabe.fiveElementsClass}
 			`;
 
 			const rightDiv = document.createElement('div');
