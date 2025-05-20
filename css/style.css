@@ -58,7 +58,7 @@ body {
 	background: #fafafa;
 	display: flex;
 	align-items: flex-start;
-	justify-content: space-between;
+	justify-content: center;
 	border: 1px solid #555;
 	overflow: hidden;
 	text-align: center;
@@ -146,9 +146,6 @@ body {
 .sectionB3-2 { border-bottom: none; }
 .sectionB1, .sectionB2, .sectionB3 { border-right: 1px solid #ccc; }
 .sectionB3 { border-right: none; }
-.p13 {
-
-}
 .selected {
 	background-color: #dddddd !important;
 }
@@ -233,7 +230,7 @@ body {
 		padding: 20px;
 		white-space: nowrap;
 		overflow: hidden;
-		text-overflow: ellipsis;
+		text-wrap: auto;
 		flex-direction: column;
 		justify-content: flex-start;
 	}

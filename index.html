@@ -174,8 +174,8 @@
 			} else {
 				h = Number(t);
 			}
-			if (h === 0)   return 0;                 // 00:00–00:59 → late Rat
-			if (h === 23)  return 12;                  // 23:00–23:59 → early Rat
+			if (h === 0)   return 0;
+			if (h === 23)  return 12;
 			// 01–22 → floor((h+1)/2) gives 1…11
 			
 			return Math.floor((h + 1) / 2);
@@ -396,7 +396,7 @@
 				${params.name} <br>
 				${astrolabe.solarDate} (${currentAge}) <br>
 				${params.hour}:${params.minute} ${astrolabe.time} <br>
-				Lunar Year: ${astrolabe.rawDates.lunarDate.lunarYear} Month: ${astrolabe.rawDates.lunarDate.lunarMonth} Day: ${astrolabe.rawDates.lunarDate.lunarDay} 
+				Lunar Year: ${astrolabe.rawDates.lunarDate.lunarYear} Month: ${astrolabe.rawDates.lunarDate.lunarMonth} Day: ${astrolabe.rawDates.lunarDate.lunarDay} <br>
 				${astrolabe.rawDates.lunarDate.isLeap ? 'Leap Month' : ''} <br>
 				Element is : ${astrolabe.fiveElementsClass}
 			`;
@@ -586,9 +586,6 @@
 					
 					drawMultipleLines(id, [target], color)
 					registerResizeRedraw(() => {
-						if (index == 0) {
-							svg.querySelectorAll("line").forEach(line => line.remove());
-						}
 						if (lastClickPalace === i) {
 							drawMultipleLines(id, [target], color)
 						}
@@ -789,10 +786,6 @@
 				drawQueue.forEach((data, index) => {
 					drawMultipleLines(data.id, [`p${data.target_id}`], data.color, false, 'center', palaceOpposites[i].direction, '5%', labels[data.index].code, 'shortLineLayer', index)
 					registerResizeRedraw(() => {
-						if (i == first_draw) {
-							const svg = document.getElementById("shortLineLayer");
-							svg.querySelectorAll("line").forEach(line => line.remove());
-						}
 						drawMultipleLines(data.id, [`p${data.target_id}`], data.color, false, 'center', palaceOpposites[i].direction, '5%', labels[data.index].code, 'shortLineLayer', index)
 					})
 				})
