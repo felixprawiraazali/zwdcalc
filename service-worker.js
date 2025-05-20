@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zwds-cache-v2'; // 🔁 bump this to force recache
+const CACHE_NAME = 'zwds-cache-v2.1'; // 🔁 bump this to force recache
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -38,7 +38,13 @@ self.addEventListener('activate', event => {
 
 // Fetch: stale-while-revalidate + fallback for navigation
 self.addEventListener('fetch', event => {
-  // Handle navigation requests (HTML with query params)
+  const url = new URL(event.request.url);
+
+  // Only handle http and https requests
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return; // Skip chrome-extension, file://, etc.
+  }
+
   if (event.request.mode === 'navigate') {
     event.respondWith(
       caches.match('./index.html').then(cachedPage => {
@@ -54,12 +60,11 @@ self.addEventListener('fetch', event => {
       return cache.match(event.request).then(cachedResponse => {
         const fetchPromise = fetch(event.request)
           .then(networkResponse => {
-            if (networkResponse.status === 200) {
+            if (networkResponse && networkResponse.status === 200 && event.request.url.startsWith('http')) {
               cache.put(event.request, networkResponse.clone());
             }
             return networkResponse;
-          })
-          .catch(() => { /* offline or failed */ });
+          }).catch(() => {});
 
         return cachedResponse || fetchPromise;
       });
