@@ -286,6 +286,27 @@
 		  return rotated;
 		}
 
+		function starsWithMarking(stars, className, heavenlyStem, astroData, cn_year) {
+			return stars.map(e => {
+				const heavenly_transformation = (() => {
+					const st = getTransformationType(heavenlyStem, e.key);
+					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}</label>` : "";
+				})();
+
+				const self_transformation = (() => {
+					const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
+					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}↑</label>` : "";
+				})();
+
+				const yearly_transformation = (() => {
+					const st = getTransformationType(cn_year[0], e.key);
+					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].circle}</label>` : "";
+				})();
+
+				return `<span class="${className}" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
+			}).join('')
+		}
+
 		function generateChart(params) {
 			clearLineRedrawQueue()
 			cn_year = getChineseYearPinyin(params.refYear)
@@ -338,43 +359,9 @@
 					.filter(star => onlyShowStars().includes(star.name))
 					.map(mn => stars.find(star => star.en === mn.name) ?? '')
 
-				const markedNames = major.map(e => {
-					const heavenly_transformation = (() => {
-						const st = getTransformationType(heavenlyStem, e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}</label>` : "";
-					})();
+				const markedNames = starsWithMarking(major, 'major', heavenlyStem, astroData, cn_year)
 
-					const self_transformation = (() => {
-						const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}↑</label>` : "";
-					})();
-
-					const yearly_transformation = (() => {
-						const st = getTransformationType(cn_year[0], e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].circle}</label>` : "";
-					})();
-
-					return `<span class="major" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
-				}).join('');
-
-				const minorMarkedNames = minor.map(e => {
-					const heavenly_transformation = (() => {
-						const st = getTransformationType(heavenlyStem, e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}</label>` : "";
-					})();
-
-					const self_transformation = (() => {
-						const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}↑</label>` : "";
-					})();
-
-					const yearly_transformation = (() => {
-						const st = getTransformationType(cn_year[0], e.key);
-						return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].circle}</label>` : "";
-					})();
-
-					return `<span class="minor" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
-				}).join('');
+				const minorMarkedNames = starsWithMarking(minor, 'minor', heavenlyStem, astroData, cn_year)
 							
 				clone.querySelector('.sectionA1').innerHTML = `
 					${markedNames} 
