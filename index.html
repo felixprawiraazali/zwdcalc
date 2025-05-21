@@ -170,10 +170,10 @@
 		}
 
 		const labels = [
-			{ code: "L", color: "#65d93d", colorName: "green", circle: "Ⓛ"},
-			{ code: "Q", color: "#01a2ff", colorName: "blue", circle: "Ⓠ" },
-			{ code: "K", color: "#feae01", colorName: "orange", circle: "Ⓚ" },
-			{ code: "J", color: "#ee2917", colorName: "red", circle: "Ⓙ" }
+			{ code: "L", color: "#65d93d", colorName: "green", circle: "⧖L"},
+			{ code: "Q", color: "#01a2ff", colorName: "blue", circle: "⧖Q" },
+			{ code: "K", color: "#feae01", colorName: "orange", circle: "⧖K" },
+			{ code: "J", color: "#ee2917", colorName: "red", circle: "⧖J" }
 		];
 
 		const palaceOpposites = [
@@ -306,7 +306,7 @@
 
 				const self_transformation = (() => {
 					const st = getTransformationType(astroData.decadal.heavenlyStem, e.key);
-					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}↑</label>` : "";
+					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].code}★</label>` : "";
 				})();
 
 				const yearly_transformation = (() => {
