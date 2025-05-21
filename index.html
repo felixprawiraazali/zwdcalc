@@ -170,10 +170,10 @@
 		}
 
 		const labels = [
-			{ code: "L", color: "green", circle: "Ⓛ"},
-			{ code: "Q", color: "blue", circle: "Ⓠ" },
-			{ code: "K", color: "orange", circle: "Ⓚ" },
-			{ code: "J", color: "red", circle: "Ⓙ" }
+			{ code: "L", color: "#65d93d", colorName: "green", circle: "Ⓛ"},
+			{ code: "Q", color: "#01a2ff", colorName: "blue", circle: "Ⓠ" },
+			{ code: "K", color: "#feae01", colorName: "orange", circle: "Ⓚ" },
+			{ code: "J", color: "#ee2917", colorName: "red", circle: "Ⓙ" }
 		];
 
 		const palaceOpposites = [
@@ -829,6 +829,7 @@
 				stemData.mutagen.forEach((target, index) => {
 					if (index !== -1) {
 						let color = labels[index].color
+						let colorName = labels[index].colorName
 						let target_id = document.getElementById(target).closest('div[id^="p"]').dataset.index
 						
 						if (target_id == opposite) {
@@ -840,6 +841,7 @@
 								id,
 								target_id,
 								color,
+								colorName,
 								index
 							})
 						}
@@ -847,8 +849,8 @@
 				})
 				
 				drawQueue.sort((a, b) => {
-				  const prioA = colorPriority[a.color] ?? Infinity;
-				  const prioB = colorPriority[b.color] ?? Infinity;
+				  const prioA = colorPriority[a.colorName] ?? Infinity;
+				  const prioB = colorPriority[b.colorName] ?? Infinity;
 				  return prioA - prioB;
 				});
 
