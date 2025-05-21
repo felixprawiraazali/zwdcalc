@@ -21,6 +21,12 @@ self.addEventListener('install', event => {
   );
 });
 
+self.addEventListener('message', (event) => {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting(); // Immediately activate the new SW
+  }
+});
+
 // Activate: clean up old cache versions
 self.addEventListener('activate', event => {
   event.waitUntil(

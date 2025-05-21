@@ -124,6 +124,7 @@
 					  newWorker.onstatechange = () => {
 					    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
 					      console.log("🔄 New version found. Reloading...");
+					      newWorker.postMessage({ action: 'skipWaiting' });
 					      window.location.reload();
 					    }
 					  };
