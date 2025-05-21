@@ -10,68 +10,70 @@
   <meta name="theme-color" content="#1a202c" />
 </head>
 <body class="bg-gray-100 text-gray-600">
-	<div class="max-w-4xl mx-auto p-6 space-y-8">
-		<!-- Form -->
-		<form id="chartForm" class="bg-white p-6 rounded-lg shadow space-y-6">
-			<h2 class="text-2xl font-semibold">Plot Zi Wei Dou Shu Chart</h2>
+	<!-- <div class="max-w-4xl mx-auto p-6 space-y-8"> -->
+		<!-- Modal Background -->
+		<div id="formModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+			<!-- Modal Content -->
+			<div class="bg-white p-6 rounded-lg shadow space-y-6 w-full max-w-xl relative">
+				<!-- Close button -->
+				<button id="closeFormBtn" class="absolute top-2 right-2 text-gray-500 hover:text-black">&times;</button>
+				<form id="chartForm" class="space-y-6">
+					<h2 class="text-2xl font-semibold">Plot Zi Wei Dou Shu Chart</h2>
 
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<!-- Name -->
-				<div>
-					<label class="block font-medium">Name</label>
-					<input id="name" name="name" type="text"
-						 class="mt-1 w-full border rounded p-2"
-						 placeholder="e.g. Felix Prawira">
-				</div>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<label class="block font-medium">Name</label>
+							<input id="name" name="name" type="text"
+								 class="mt-1 w-full border rounded p-2"
+								 placeholder="e.g. Felix Prawira">
+						</div>
 
-				<!-- Birth Date -->
-				<div class="space-y-1">
-					<label class="block font-medium">Birth Date</label>
-					<div class="flex gap-2">
-					<input id="year"  name="year"  type="number" placeholder="YYYY" class="w-1/3 border rounded p-2">
-					<input id="month" name="month" type="number" placeholder="MM"   class="w-1/3 border rounded p-2">
-					<input id="day"   name="day"   type="number" placeholder="DD"   class="w-1/3 border rounded p-2">
+						<div class="space-y-1">
+							<label class="block font-medium">Birth Date</label>
+							<div class="flex gap-2">
+							<input id="year"  name="year"  type="number" placeholder="YYYY" class="w-1/3 border rounded p-2">
+							<input id="month" name="month" type="number" placeholder="MM"   class="w-1/3 border rounded p-2">
+							<input id="day"   name="day"   type="number" placeholder="DD"   class="w-1/3 border rounded p-2">
+							</div>
+						</div>
+
+						<div class="space-y-1">
+							<label class="block font-medium">Birth Time</label>
+							<div class="flex gap-2">
+							<input id="hour"   name="hour"   type="number" placeholder="HH" class="w-1/2 border rounded p-2">
+							<input id="minute" name="minute" type="number" placeholder="MM" class="w-1/2 border rounded p-2">
+							</div>
+						</div>
+
+						<div>
+							<label class="block font-medium">Gender</label>
+							<div class="mt-1 flex gap-4">
+							<label><input type="radio" name="gender" value="male"> Male</label>
+							<label><input type="radio" name="gender" value="female"> Female</label>
+							</div>
+						</div>
+
+						<div>
+							<label class="block font-medium">Reference Year</label>
+							<select id="refYear" name="refYear" class="mt-1 w-full border rounded p-2"></select>
+						</div>       
 					</div>
-				</div>
 
-				<!-- Birth Time -->
-				<div class="space-y-1">
-					<label class="block font-medium">Birth Time</label>
-					<div class="flex gap-2">
-					<input id="hour"   name="hour"   type="number" placeholder="HH" class="w-1/2 border rounded p-2">
-					<input id="minute" name="minute" type="number" placeholder="MM" class="w-1/2 border rounded p-2">
+					<div class="mt-4">
+					  <label class="inline-flex items-center">
+					    <input type="checkbox" name="twins" id="twins" class="form-checkbox h-5 w-5 text-blue-600">
+					    <span class="ml-2 text-sm">Twins</span>
+					  </label>
 					</div>
-				</div>
 
-				<!-- Gender -->
-				<div>
-					<label class="block font-medium">Gender</label>
-					<div class="mt-1 flex gap-4">
-					<label><input type="radio" name="gender" value="male"> Male</label>
-					<label><input type="radio" name="gender" value="female"> Female</label>
-					</div>
-				</div> 
-
-				<!-- Reference Year Dropdown -->
-				<div>
-					<label class="block font-medium">Reference Year</label>
-					<select id="refYear" name="refYear" class="mt-1 w-full border rounded p-2"></select>
-				</div>       
+					<button type="submit"
+							class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+						Plot Chart
+					</button>
+				</form>
 			</div>
-
-			<div class="mt-4">
-			  <label class="inline-flex items-center">
-			    <input type="checkbox" name="twins" id="twins" class="form-checkbox h-5 w-5 text-blue-600">
-			    <span class="ml-2 text-sm">Twins</span>
-			  </label>
-			</div>
-
-			<button type="submit"
-					class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-				Plot Chart
-			</button>
-		</form>
-
+		</div>
+	<!-- </div> -->
 		<div class="zwds-grid">
 			<template id="palace-template">
 				<div class="sectionA">
@@ -107,7 +109,6 @@
 				</defs>
 			</svg>
 		</div>	
-	</div>
 
 	<script src="./js/iztro.js"></script>
 	<script src="./js/stars_mapping.js"></script>
@@ -461,7 +462,9 @@
 				${params.hour}:${params.minute} ${astrolabe.time} <br>
 				Lunar Year: ${astrolabe.rawDates.lunarDate.lunarYear} Month: ${astrolabe.rawDates.lunarDate.lunarMonth} Day: ${astrolabe.rawDates.lunarDate.lunarDay} <br>
 				${astrolabe.rawDates.lunarDate.isLeap ? 'Leap Month' : ''} <br>
-				Element is : ${astrolabe.fiveElementsClass}
+				Element is : ${astrolabe.fiveElementsClass} <br>
+				
+				<span id="openFormBtn" class="editInfo" >Edit Information</span>
 			`;
 
 			const rightDiv = document.createElement('div');
@@ -878,6 +881,8 @@
 		}
 
 		document.addEventListener('DOMContentLoaded', () => {
+			let resizeTimeout;
+	    const toggleCheckbox = document.getElementById('twins');
 			const params = parseQuery();
 			fillForm(params);
 
@@ -894,7 +899,6 @@
 				window.location.search = qs;
 			});
 
-			let resizeTimeout;
 			window.addEventListener('resize', () => {
 				clearTimeout(resizeTimeout);
 				resizeTimeout = setTimeout(() => {
@@ -902,11 +906,20 @@
 				}, 50);
 			});
 
-	    const toggleCheckbox = document.getElementById('twins');
 			toggleCheckbox.addEventListener('change', (e) => {
 				twins = e.target.checked
 	      toggleTwins(e.target.checked);
 	    });
+
+	    document.getElementById('openFormBtn').addEventListener('click', () => {
+				document.getElementById('formModal').classList.remove('hidden');
+				document.getElementById('formModal').classList.add('flex');
+			});
+
+			document.getElementById('closeFormBtn').addEventListener('click', () => {
+				document.getElementById('formModal').classList.add('hidden');
+				document.getElementById('formModal').classList.remove('flex');
+			});
 		});
 	</script>
 </body>
