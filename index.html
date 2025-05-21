@@ -120,13 +120,14 @@
 
 		      // Detect updates
 		      registration.onupdatefound = () => {
-		        const newWorker = registration.installing;
-		        newWorker.onstatechange = () => {
-		          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-		            alert("🔄 A new version is available. Please refresh!");
-		          }
-		        };
-		      };
+					  const newWorker = registration.installing;
+					  newWorker.onstatechange = () => {
+					    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+					      console.log("🔄 New version found. Reloading...");
+					      window.location.reload();
+					    }
+					  };
+					};
 		    })
 		    .catch(err => console.error('❌ Service worker failed:', err));
 		}
