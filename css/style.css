@@ -10,6 +10,33 @@ body {
 	background: #f5f5f5;
 	font-family: sans-serif;
 }
+.stars {
+	padding: 3px;
+}
+.active-green {
+	background-color: #65d93d;
+	color: white;
+	z-index: 10;
+	position: relative;
+}
+.active-blue {
+	background-color: #01a2ff;
+	color: white;
+	z-index: 10;
+	position: relative;
+}
+.active-orange {
+	background-color: #feae01;
+	color: white;
+	z-index: 10;
+	position: relative;
+}
+.active-red {
+	background-color: #ee2917;
+	color: white;
+	z-index: 10;
+	position: relative;
+}
 .editInfo {
 	text-decoration: underline;
 	cursor: pointer;
@@ -79,7 +106,7 @@ body {
 }
 .sectionA1 {
 	align-items: flex-start;
-	justify-content: flex-start;	
+	justify-content: flex-start;
 }
 .sectionA2 { 
 	border-right: none; 

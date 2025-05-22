@@ -78,7 +78,12 @@
 			<template id="palace-template">
 				<div class="sectionA">
 					<div class="sectionA1"></div>
-					<div class="sectionA2"></div>
+					<div class="sectionA2">
+						<span class="drange"></span>
+						<span class="dpalace"></span>
+						<span class="apalace"></span>
+						<span class="lmonth"></span>
+					</div>
 				</div>
 				<div class="sectionC">
 					<div class="sectionC1"></div>
@@ -314,7 +319,12 @@
 					return st != null ? ` <label style="color: ${labels[st].color};">${labels[st].circle}</label>` : "";
 				})();
 
-				return `<span class="${className}" id="${e.key}">${e.en}${heavenly_transformation}${self_transformation}${yearly_transformation}</span>`;
+				return `
+					<div>
+						<span id="${e.key}" class="stars">${e.en}</span>
+						${heavenly_transformation}${self_transformation}${yearly_transformation}
+					</div>
+				`;
 			}).join('')
 		}
 
@@ -378,10 +388,15 @@
 					${markedNames} 
 					${minorMarkedNames}
 				`;
-				clone.querySelector('.sectionA2').innerHTML = `
-					${major.map(e => `<span class="major">${e.zh}</span>`).join('')} 
-					${minor.map(e => `<span class="minor">${e.zh}</span>`).join('')}
+				const drange = clone.querySelector('.drange')
+				clone.querySelector('.drange').innerHTML = `
+					Age ${astroData.decadal.range.join('-')}
 				`;
+				drange.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
+				drange.addEventListener('click', (e) => {
+					e.stopPropagation();
+					setPalaceAge(i)
+				})
 				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
 				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
 				clone.querySelector('.sectionB2-1').textContent = '';
@@ -397,11 +412,7 @@
 
 				const sectionB32 = clone.querySelector('.sectionB3-2')
 				sectionB32.textContent = astroData.decadal.range.join('-')
-				sectionB32.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
-				sectionB32.addEventListener('click', (e) => {
-					e.stopPropagation();
-					setPalaceAge(i)
-				})
+				
 
 				cell.addEventListener('click', function() {
 					setTransformationArrow(i)
@@ -515,26 +526,28 @@
 			let indexSelectedPalace = indexMap[p]
 			let selectedPalace = astrolabe.palaces[indexSelectedPalace]
 			let [min, max] = range[indexSelectedPalace]
+			selectedYear = '-'
 
 			for (let i = 0; i < 12; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 				let el = document.querySelector(`.zwds-grid .p${i}`);
 				el.classList.remove('selected')
-				el.querySelector('.sectionC2').innerHTML = ''
+				el.querySelector('.dpalace').innerHTML = ''
 				if (i == p) {
 					el.classList.add('selected')
 				}
 
 				if (Object.keys(rotated).length !== 0) {
-					el.querySelector('.sectionC1').innerHTML = ''
-					el.querySelector('.sectionC2').innerHTML = `D.${rotated[indexMap[i]]}`
+					el.querySelector('.apalace').innerHTML = ''
+					el.querySelector('.lmonth').innerHTML = ''
+					el.querySelector('.dpalace').innerHTML = `D.${rotated[indexMap[i]]}`
 				}
 
-				let age = getAgesInRange(astroData.ages, min, max)
-				el.querySelector('.sectionB2-1').textContent = age
+				let age = getAgesInRange(astroData.ages, min, max)				
+				el.querySelector('.sectionB2-1').textContent = age.length > 0 ? `Lunar Age ${age}` : ''
 				let sectionB22 = el.querySelector('.sectionB2-2')
 				if (parseInt(age) > 0) {
-					sectionB22.textContent = parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1
+					sectionB22.textContent = `Year ${parseInt(age) + parseInt(astrolabe.rawDates.lunarDate.lunarYear) - 1}`
 					sectionB22.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
 					sectionB22.addEventListener('click', wrappedShowASelf)
 				} else {
@@ -544,8 +557,10 @@
 			}		
 
 			let el = document.querySelector(`.zwds-grid .p13 .right`);
+
 			el.innerHTML = `
-				Decade ${min} - ${max}
+				Decade: ${min} - ${max} <br>
+				Year: <span id="selectedYear">${selectedYear}</span>
 			`
 		}
 
@@ -554,7 +569,7 @@
 			showASelf(e);
 		}
 
-		function showASelf(event) {
+		function showASelf(event) {			
 			let cornerPalace = document.getElementById("p8").dataset.palace
 			let i = event.target.closest('div[id^="p"]').dataset.index
 			let rotated = i ? getRotatedPalaceNames(indexMap[i]) : {}
@@ -562,10 +577,14 @@
 
 			for (let i = 0; i < 12; i++) {
 				let el = document.querySelector(`.zwds-grid .p${i}`);
-				let sectionC1 = el.querySelector('.sectionC1')
-				sectionC1.innerHTML = ''
+				let apalace = el.querySelector('.apalace')
+				let lmonth = el.querySelector('.lmonth')
+				apalace.innerHTML = ''
+				lmonth.innerHTML = ''
 				if (Object.keys(rotated).length !== 0) {
-					sectionC1.innerHTML = `A.${rotated[indexMap[i]]} (${monthData[indexMap[i]]})`
+					apalace.innerHTML = `A.${rotated[indexMap[i]]}`
+					lmonth.innerHTML = `(Lunar ${monthData[indexMap[i]]})`
+					document.getElementById('selectedYear').innerText = parseInt(event.target.innerText.match(/\d{4}/)[0]);
 				}
 			}
 		}
@@ -624,6 +643,14 @@
 				svg.querySelectorAll("line").forEach(line => line.remove());
 			}
 
+			document.querySelectorAll('[class*="active-"]').forEach(el => {
+			  el.classList.forEach(cls => {
+			    if (cls.startsWith('active-')) {
+			      el.classList.remove(cls);
+			    }
+			  });
+			});
+
 			if (lastClickPalace == i) {
 				lastClickPalace = -1
 				return null
@@ -641,14 +668,15 @@
 			stemData.mutagen.forEach((target, index) => {
 				if (index !== -1) {
 					let color = labels[index].color
+					let colorName = labels[index].colorName
 					
 					if (index == 3) {						
 						let target_id = document.getElementById(target).closest('div[id^="p"]').dataset.index						
 						let opposite = palaceOpposites[parseInt(target_id)].opposite
-						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+						drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'center')
 						registerResizeRedraw(() => {
 							if (lastClickPalace === i) {
-								drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'right')
+								drawMultipleLines(target, ["p"+opposite], color, true, 'center', 'center')
 							}
 						})
 					}
@@ -659,11 +687,12 @@
 							drawMultipleLines(id, [target], color)
 						}
 					});
+					document.getElementById(target).classList.add(`active-${colorName}`)
 				}
 			})
 		}
 
-		function drawMultipleLines(fromId, toIds, color, dash = false, targetSide = 'right', fromSide = 'center', maxLength = null, labelText = null, template = 'lineLayer', offsetIndex = 0) {
+		function drawMultipleLines(fromId, toIds, color, dash = false, targetSide = 'center', fromSide = 'center', maxLength = null, labelText = null, template = 'lineLayer', offsetIndex = 0) {
 			const container = document.querySelector('.zwds-grid');
 			const svg = document.getElementById(template);
 			const containerRect = container.getBoundingClientRect();
