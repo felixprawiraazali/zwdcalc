@@ -81,10 +81,10 @@ body {
 .zwds-grid > div:not(.p13) {
 	display: flex;
 	flex-direction: column;
-	cursor: pointer;
-	border: 1px solid #999;
+	cursor: pointer;	
 	background: #fafafa;
 	transition: background .2s;
+	outline: 1.5px solid #999;	
 }
 .zwds-grid > div {
 	overflow: hidden;
@@ -96,7 +96,7 @@ body {
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	border: 1px solid #999;
+	outline: 1.6px solid #999;
 	overflow: hidden;
 	text-align: center;
 	flex-direction: row;
