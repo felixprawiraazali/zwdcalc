@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zwds-cache-v2.6'; // 🔁 bump this to force recache
+const CACHE_NAME = 'zwds-cache-v2.7'; // 🔁 bump this to force recache
 const FILES_TO_CACHE = [
   './',
   './index.html',
@@ -11,7 +11,8 @@ const FILES_TO_CACHE = [
   './js/tailwind.js',
   './manifest.json',
   './img/192.png',
-  './img/512.png'
+  './img/512.png',
+  './font/avenir_roman_12.woff'
 ];
 
 // Install: cache all static files
