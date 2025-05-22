@@ -116,6 +116,8 @@
 		</div>	
 
 	<script src="./js/iztro.js"></script>
+	<script src="./js/branch.js"></script>
+	<script src="./js/palace.js"></script>
 	<script src="./js/stars_mapping.js"></script>
 	<script src="./js/transformation.js"></script>
 	<script>
@@ -336,7 +338,7 @@
 			
 			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 1)
-			// console.log(data)
+			console.log(data)
 
 			currentAge = parseInt(params.refYear) - parseInt(params.year) + 1
 
@@ -389,19 +391,17 @@
 					${minorMarkedNames}
 				`;
 				const drange = clone.querySelector('.drange')
-				clone.querySelector('.drange').innerHTML = `
-					Age ${astroData.decadal.range.join('-')}
-				`;
+				clone.querySelector('.drange').innerHTML = `Age ${astroData.decadal.range.join('-')}`;
 				drange.classList.add('cursor-pointer', 'text-black-800', 'hover:underline')
 				drange.addEventListener('click', (e) => {
 					e.stopPropagation();
 					setPalaceAge(i)
 				})
-				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem)
-				clone.querySelector('.sectionB1-2').textContent = capitalizeFirstLetter(astroData.earthlyBranch)
+				clone.querySelector('.sectionB1-1').textContent = capitalizeFirstLetter(astroData.heavenlyStem) + ' ' + capitalizeFirstLetter(astroData.earthlyBranch)
+				clone.querySelector('.sectionB1-2').textContent = heavenly[`${astroData.heavenlyStem}Heavenly`]+earthly[`${astroData.earthlyBranch}Earthly`]
 				clone.querySelector('.sectionB2-1').textContent = '';
 				clone.querySelector('.sectionB2-2').textContent = '';
-				clone.querySelector('.sectionB3-1').textContent = palaceName
+				clone.querySelector('.sectionB3-1').textContent = `${palaceName} Palace`
 				
 				let twinIndex = indexMap[i] - 1 < 0 ? 11 : indexMap[i] - 1
 				
@@ -411,8 +411,7 @@
 				twinDecadalRange[twinIndex] = astroData.decadal.range
 
 				const sectionB32 = clone.querySelector('.sectionB3-2')
-				sectionB32.textContent = astroData.decadal.range.join('-')
-				
+				sectionB32.textContent = cn_palace[astroData.name]				
 
 				cell.addEventListener('click', function() {
 					setTransformationArrow(i)
@@ -898,10 +897,12 @@
 			for (let i = 0; i <= 11; i++) {
 				let el = document.querySelector(`.zwds-grid .p${i}`);
 				let sectionB31 = el.querySelector('.sectionB3-1')
-				sectionB31.textContent = sequence[indexMap[i]]
+				sectionB31.textContent = `${sequence[indexMap[i]]} Palace`
+				let sectionB32 = el.querySelector('.sectionB3-2')
+				sectionB32.textContent = cn_palace[sequence[indexMap[i]].toLowerCase()] ?? ''
 
-				const sectionB32 = el.querySelector('.sectionB3-2')
-				sectionB32.textContent = range[indexMap[i]].join('-')
+				const drange = el.querySelector('.drange')
+				drange.textContent = `Age ${range[indexMap[i]].join('-')}`
 
 				let [min, max] = range[indexMap[i]];
 				if (isWithinRange(currentAge, min, max)) {

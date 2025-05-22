@@ -54,9 +54,8 @@ body {
 }
 
 .zwds-grid {
-	width: min(95vw, 120vh);        /* Give more width space relative to height */
-	max-width: 100vw;
-	aspect-ratio: 4 / 3;            /* Wider than tall */
+	width: min(98vw, 160vh);        /* Give more width space relative to height */
+	max-width: 100vw;	
 	min-height: 600px;              /* Optional: reduce from 900px if too tall */
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -146,6 +145,7 @@ body {
 	flex: 0 0 40%;
 	display: flex;
 	flex-direction: column;
+	font-weight: 600;
 }
 .sectionB2-1, .sectionB2-2 {
 	flex: 1;
@@ -205,6 +205,9 @@ body {
 @media (min-width: 601px) {
 	.sectionA1 {
 		flex: 0 0 60%;
+	}
+	.zwds-grid {
+		aspect-ratio: 16 / 10;
 	}
 }
 /* Small screens */

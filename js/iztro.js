@@ -16078,7 +16078,7 @@
             maoEarthly: "mao",
             chenEarthly: "chen",
             siEarthly: "si",
-            wuEarthly: "woo",
+            wuEarthly: "wu",
             weiEarthly: "wei",
             shenEarthly: "shen",
             youEarthly: "you",
