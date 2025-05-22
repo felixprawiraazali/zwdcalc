@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zwds-cache-v2.7'; // 🔁 bump this to force recache
+const CACHE_NAME = 'zwds-cache-v2.8'; // 🔁 bump this to force recache
 const FILES_TO_CACHE = [
   './',
   './index.html',

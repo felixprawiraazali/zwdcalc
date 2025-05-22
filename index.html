@@ -511,6 +511,7 @@
 
 			container.appendChild(center);
 			bindEditButton()
+			bindCheckboxBtn()
 
 			setPalaceAge()
 
@@ -990,6 +991,26 @@
 			}
 		}
 
+		function bindCheckboxBtn() {
+			const checkbox = document.getElementById('twins');
+			if (checkbox) {
+				checkbox.checked = twins;
+				checkbox.addEventListener('change', (e) => {
+					twins = e.target.checked;
+					toggleTwins(twins);
+					const urlParams = new URLSearchParams(window.location.search);
+					if (twins) {
+						urlParams.set('twins', 'on');
+					} else {
+						urlParams.delete('twins');
+					}
+
+					const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+					window.history.replaceState({}, '', newUrl);
+				});
+			}
+		}
+
 		document.addEventListener('DOMContentLoaded', () => {
 			let resizeTimeout;
 			const params = parseQuery();
@@ -1016,26 +1037,6 @@
 					requestAnimationFrame(redrawAllLines);
 				}, 50);
 			});
-
-			setTimeout(() => {
-				const checkbox = document.getElementById('twins');
-				if (checkbox) {
-					checkbox.checked = twins;
-					checkbox.addEventListener('change', (e) => {
-						twins = e.target.checked;
-						toggleTwins(twins);
-						const urlParams = new URLSearchParams(window.location.search);
-						if (twins) {
-							urlParams.set('twins', 'on');
-						} else {
-							urlParams.delete('twins');
-						}
-
-						const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-						window.history.replaceState({}, '', newUrl);
-					});
-				}
-			}, 0);
 		});
 	</script>
 </body>
