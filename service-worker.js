@@ -1,9 +1,11 @@
-const CACHE_NAME = 'zwds-cache-v2.4'; // 🔁 bump this to force recache
+const CACHE_NAME = 'zwds-cache-v2.5'; // 🔁 bump this to force recache
 const FILES_TO_CACHE = [
   './',
   './index.html',
   './css/style.css',
   './js/iztro.js',
+  './js/branch.js',
+  './js/palace.js',
   './js/stars_mapping.js',
   './js/transformation.js',
   './js/tailwind.js',
