@@ -81,7 +81,7 @@ body {
 	overflow: hidden;
 }
 .zwds-grid > .p13 {
-	font-size: min(calc(0.6rem + 0.5vw), 16px);
+	font-size: min(calc(0.6rem + 0.5vw), 15px);
 	grid-area: p13;
 	background: #fafafa;
 	display: flex;
@@ -99,18 +99,29 @@ body {
 .sectionA1, .sectionA2 {
 	flex: 1;
 	display: flex;
-	font-size: min(calc(0.6rem + 0.5vw), 16px);
 	text-align: left;
 	flex-direction: column;
 }
 .sectionA1 {
 	align-items: flex-start;
 	justify-content: flex-start;
+	font-size: min(calc(0.6rem + 0.5vw), 15px);
 }
 .sectionA2 { 
 	border-right: none; 
 	align-items: flex-end;
 	justify-content: flex-start;
+}
+.drange {
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
+}
+.dpalace {
+	font-size: min(calc(0.55rem + 0.5vw), 15px);
+	font-weight: 600;
+}
+.apalace, .lmonth {
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
+	font-weight: 600;
 }
 .sectionC { 
 	flex: 0.5; 
@@ -120,7 +131,7 @@ body {
 	justify-content: center;
 	text-align: center;
 	font-weight: 600;
-	font-size: min(calc(0.55rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
 	padding: var(--item-padding);
 }
 .sectionC1 {
@@ -132,12 +143,12 @@ body {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	font-size: min(calc(0.55rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
 	text-align: center;
 	flex: 0 0 20%;
 }
 .sectionB1-1, .sectionB1-2 {
-	font-size: min(calc(0.55rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
 	
 	text-align: center;
 }    
@@ -152,7 +163,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: min(calc(0.55rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
 	text-align: center;
 }
 .sectionB2-2 { border-bottom: none; }
@@ -166,7 +177,7 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: min(calc(0.55rem + 0.5vw), 14px);
+	font-size: min(calc(0.55rem + 0.5vw), 13px);
 	
 	text-align: center;
 }
@@ -186,7 +197,7 @@ body {
     left: 801px;
     top: 699px;
     display: none;
-    font-size: min(calc(0.55rem + 0.5vw), 14px);
+    font-size: min(calc(0.55rem + 0.5vw), 13px);
 }
 .major {
 	color: darkblue;
@@ -207,7 +218,7 @@ body {
 		flex: 0 0 60%;
 	}
 	.zwds-grid {
-		aspect-ratio: 16 / 10;
+		aspect-ratio: 16 / 9;
 	}
 }
 /* Small screens */

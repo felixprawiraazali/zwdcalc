@@ -52,22 +52,10 @@
 							<label><input type="radio" name="gender" value="female"> Female</label>
 							</div>
 						</div>
-
-						<div>
-							<label class="block font-medium">Reference Year</label>
-							<select id="refYear" name="refYear" class="mt-1 w-full border rounded p-2"></select>
-						</div>       
-					</div>
-
-					<div class="mt-4">
-					  <label class="inline-flex items-center">
-					    <input type="checkbox" name="twins" id="twins" class="form-checkbox h-5 w-5 text-blue-600">
-					    <span class="ml-2 text-sm">Twins</span>
-					  </label>
 					</div>
 
 					<button type="submit"
-							class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+						class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
 						Plot Chart
 					</button>
 				</form>
@@ -102,6 +90,28 @@
 						<div class="sectionB3-1"></div>
 						<div class="sectionB3-2"></div>
 					</div>
+				</div>
+			</template>
+			<template id="palace-13">
+				<div class="p13">
+					<div class="left flex flex-col justify-between h-full">
+						<div>
+							<div class="info"></div>
+							<div class="actions">
+								<div>
+									Twins: <input type="checkbox" name="twins" id="twins">
+								</div>
+								<div>
+									Current Year: 
+									<select id="refYear" name="refYear" class="border rounded p-1"></select>
+								</div>
+							</div>
+						</div>
+						<div>
+							<span id="openFormBtn" class="editInfo" >Edit Information</span>
+						</div>
+					</div>
+					<div class="right"></div>
 				</div>
 			</template>
 			<svg id="lineLayer" class="absolute top-0 left-0 w-full h-full pointer-events-none"></svg>
@@ -158,7 +168,6 @@
 		let decadalRange = {}
 		let twinDecadalRange = {}
 		let lastClickPalace = -1
-		const refYearSelect = document.getElementById('refYear');
 		let currentYear = new Date().getFullYear();
 		let urlParams = new URLSearchParams(window.location.search);
 		let refYearParam = parseInt(urlParams.get('refYear'), 10);
@@ -167,14 +176,6 @@
 		}
 
 		let cn_year = getChineseYearPinyin(currentYear)
-
-		for (let y = 1984; y <= currentYear + 80; y++) {
-			const option = document.createElement('option');
-			option.value = y;
-			option.textContent = y;
-			if (y === currentYear) option.selected = true;
-			refYearSelect.appendChild(option);
-		}
 
 		const labels = [
 			{ code: "L", color: "#65d93d", colorName: "green", circle: "⧖L"},
@@ -208,12 +209,27 @@
 					document.getElementById(key).value = params[key];
 				}
 			}
-			if (params.twins === 'on') {
-				twins = true
-			  document.getElementById('twins').checked = true;
-			}
 			if (params.gender) {
 				document.querySelector(`input[name="gender"][value="${params.gender}"]`)?.click();
+			}
+			if (params.twins === 'on') {
+				twins = true;
+
+				// If static form has checkbox (in modal), pre-check it
+				const formCheckbox = document.querySelector('#twins');
+				if (formCheckbox) formCheckbox.checked = true;
+
+				// If dynamic chart display has checkbox, wait until it's injected
+				setTimeout(() => {
+					const chartCheckbox = document.querySelector('.zwds-grid #twins');
+					if (chartCheckbox) {
+						chartCheckbox.checked = true;
+						chartCheckbox.addEventListener('change', (e) => {
+							twins = e.target.checked;
+							toggleTwins(twins);
+						});
+					}
+				}, 0);
 			}
 		}
 
@@ -338,7 +354,7 @@
 			
 			astrolabe = astro.bySolar(dob, toChineseHourIndex(timing), params.gender, true, 'en-US');
 			let data = JSON.stringify(astrolabe, null, 1)
-			console.log(data)
+			// console.log(data)
 
 			currentAge = parseInt(params.refYear) - parseInt(params.year) + 1
 
@@ -351,7 +367,8 @@
 			const container = document.querySelector('.zwds-grid');
 			container.querySelectorAll("div:not(#lineLayer):not(#shortLineLayer)").forEach(el => el.remove());
 			const tpl = document.getElementById('palace-template').content;
-
+			const tp13 = document.getElementById('palace-13').content;
+			
 			for (let i = 0; i <= 11; i++) {
 				let astroData = astrolabe.palaces[indexMap[i]]
 				let palaceName = capitalizeFirstLetter(astroData.name)
@@ -460,30 +477,40 @@
 					}
 				}
 			}
-			
-			const center = document.createElement('div');
-			center.className = 'p13';
 
-			const leftDiv = document.createElement('div');
-			leftDiv.className = 'left'
+			const center = tp13.cloneNode(true)
+			
+			// const center = document.createElement('div');
+			// center.className = 'p13';
+
+			let date = new Date(astrolabe.solarDate);
+			let formatted_dob = date.toLocaleDateString('en-GB', {
+				day: 'numeric',
+				month: 'short',
+				year: 'numeric'
+			});
+
+
+			const leftDiv = center.querySelector('.info');
 			leftDiv.innerHTML = `
-				${params.name} <br>
-				${astrolabe.solarDate} (${currentAge}) <br>
-				${params.hour}:${params.minute} ${astrolabe.time} <br>
-				Lunar Year: ${astrolabe.rawDates.lunarDate.lunarYear} Month: ${astrolabe.rawDates.lunarDate.lunarMonth} Day: ${astrolabe.rawDates.lunarDate.lunarDay} <br>
-				${astrolabe.rawDates.lunarDate.isLeap ? 'Leap Month' : ''} <br>
-				Element is : ${astrolabe.fiveElementsClass} <br>
-				
-				<span id="openFormBtn" class="editInfo" >Edit Information</span>
+				Name: ${params.name} <br>
+				Gender: ${capitalizeFirstLetter(params.gender)} <br>
+				Date of Birth: ${formatted_dob} (${currentAge}) <br>
+				Time of Birth: ${params.hour}:${params.minute} (${astrolabe.time}) <br>
+				Lunar Date: ${astrolabe.rawDates.lunarDate.lunarDay}-${astrolabe.rawDates.lunarDate.lunarMonth}-${astrolabe.rawDates.lunarDate.lunarYear}
+				${astrolabe.rawDates.lunarDate.isLeap ? '(Leap Month)' : ''} <br>
+				Element: ${astrolabe.fiveElementsClass}				
 			`;
 
-			const rightDiv = document.createElement('div');
-			rightDiv.className = 'right'
+			const rightDiv = center.querySelector('.right')			
 			rightDiv.innerHTML = ``;
 
-			center.appendChild(leftDiv);
-			center.appendChild(rightDiv);
+			const refYearSelect = center.querySelector('#refYear');
+			populateRefYearOptions(refYearSelect, currentYear)
+			refYearSelect.addEventListener('change', handleRefYearChange);
+
 			container.appendChild(center);
+			bindEditButton()
 
 			setPalaceAge()
 
@@ -912,9 +939,59 @@
 			setPalaceAge()
 		}
 
+		function populateRefYearOptions(selectElement) {
+			let thisYear = new Date().getFullYear();
+			selectElement.innerHTML = ''; // Clear existing options if any
+
+			let urlParams = new URLSearchParams(window.location.search);
+			let currentYear = parseInt(urlParams.get('refYear'), 10);
+			if (isNaN(currentYear)) {
+				currentYear = new Date().getFullYear()
+			}
+
+			for (let y = 1984; y <= thisYear + 80; y++) {
+				let option = document.createElement('option');
+				option.value = y;
+				option.textContent = y;
+				if (y === currentYear) option.selected = true;
+				selectElement.appendChild(option);
+			}
+		}
+
+		function handleRefYearChange(event) {
+			const newRefYear = event.target.value;
+			const params = new URLSearchParams(window.location.search);
+			params.set('refYear', newRefYear);
+			const newUrl = `${window.location.pathname}?${params.toString()}`;
+			window.history.replaceState({}, '', newUrl);
+			
+			setTransformationArrow(-1)
+			// window.location.search = params.toString()
+			generateChart(parseQuery())
+		}
+
+		function bindEditButton() {
+			const editBtn = document.getElementById('openFormBtn');
+			if (editBtn) {
+				editBtn.addEventListener('click', () => {
+					let modal = document.getElementById('formModal');
+					modal.classList.remove('hidden');
+					modal.classList.add('flex');
+				});
+			}
+
+			const closeBtn = document.getElementById('closeFormBtn')
+			if (closeBtn) {
+				closeBtn.addEventListener('click', () => {
+					let modal = document.getElementById('formModal');
+					modal.classList.add('hidden');
+					modal.classList.remove('flex');
+				});
+			}
+		}
+
 		document.addEventListener('DOMContentLoaded', () => {
 			let resizeTimeout;
-	    const toggleCheckbox = document.getElementById('twins');
 			const params = parseQuery();
 			fillForm(params);
 
@@ -927,6 +1004,8 @@
 			document.getElementById('chartForm').addEventListener('submit', e => {
 				e.preventDefault();
 				const form = new FormData(e.target);
+				form.append('twins', document.getElementById('twins')?.checked ? 'on' : '');
+				form.append('refYear', document.getElementById('refYear')?.value || '');
 				const qs = new URLSearchParams(form).toString();
 				window.location.search = qs;
 			});
@@ -938,20 +1017,25 @@
 				}, 50);
 			});
 
-			toggleCheckbox.addEventListener('change', (e) => {
-				twins = e.target.checked
-	      toggleTwins(e.target.checked);
-	    });
+			setTimeout(() => {
+				const checkbox = document.getElementById('twins');
+				if (checkbox) {
+					checkbox.checked = twins;
+					checkbox.addEventListener('change', (e) => {
+						twins = e.target.checked;
+						toggleTwins(twins);
+						const urlParams = new URLSearchParams(window.location.search);
+						if (twins) {
+							urlParams.set('twins', 'on');
+						} else {
+							urlParams.delete('twins');
+						}
 
-	    document.getElementById('openFormBtn').addEventListener('click', () => {
-				document.getElementById('formModal').classList.remove('hidden');
-				document.getElementById('formModal').classList.add('flex');
-			});
-
-			document.getElementById('closeFormBtn').addEventListener('click', () => {
-				document.getElementById('formModal').classList.add('hidden');
-				document.getElementById('formModal').classList.remove('flex');
-			});
+						const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+						window.history.replaceState({}, '', newUrl);
+					});
+				}
+			}, 0);
 		});
 	</script>
 </body>
