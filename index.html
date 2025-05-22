@@ -1014,6 +1014,11 @@
 
 		document.addEventListener('DOMContentLoaded', () => {
 			let resizeTimeout;
+			const hasParams = window.location.search.length > 1;
+			if (!hasParams) {
+				document.getElementById('formModal')?.classList.remove('hidden');
+				document.getElementById('formModal')?.classList.add('flex');
+			}
 			const params = parseQuery();
 			fillForm(params);
 
